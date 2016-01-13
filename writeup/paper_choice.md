@@ -1,6 +1,7 @@
 #Tentative choice: 
 
 *Capacity for Visual Features in Mental Rotation*, Y. Xu and S. L. Franconeri, *Psych Science*, Vol. 26(8), 2015
+
 Experiment 1(a) or 1(a & c) or 1(a-c) -- need to discuss what is feasible in terms of implementation and subject compensation
 
 #Justification
@@ -12,6 +13,7 @@ Of the math related papers in the 2015 issue of Psych. Science, this seemed the 
 The experiment will require presentations of consonants, blank screens, rotating pinwheels, and crosses with four bars of different colors, which can be displayed in any order, and rotated. I think these will be relatively easily achieved within an HTML5 canvas object. In addition, the experiment will require a "mechanical sound mimicking a wheel rotating," and auditory feedback, which should be relatively easy to play as well. 
 
 The procedures will follow the original experiment. The subjects will receive a set of training trials, and then a set of practice trials, followed by the experiment. The training will have to be slightly adapted to have programmatic rather than experimenter feedback, but otherwise it should proceed as in the original experiment. On a trial, the subjects will be presented with (rotation trial differences from control trial in parentheses):
+
 0. A set of 4 consonants to rehearse & remember during the trial.
 1. A cue of a (rotating) pinwheel for 2,400 ms (with rotation sound).
 2. The image of a cross.
