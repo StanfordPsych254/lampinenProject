@@ -20,6 +20,6 @@ The procedures will follow the original experiment. The subjects will receive a 
 3. A blank screen (with rotation sound).
 4. The (rotated) cross, possibly with its color order permuted (or with an incorrect rotation). 
 5. On 25% of the trials:
-..1. Test memory of the consonants.
-..2. If memory incorrect, provide auditory feedback, and 3s delay.
+  1. Test memory of the consonants.
+  2. If memory incorrect, provide auditory feedback, and 3s delay.
 
