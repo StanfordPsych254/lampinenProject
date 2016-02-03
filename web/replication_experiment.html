@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="./jspsych/jquery.min.js"></script>
+    <script src="./jspsych/jquery-ui.min.js"></script>
+    <script src="./jspsych/jspsych.js"></script>
+    <script src="./plugins/turk-final-plugin.js"></script>
+    <script src="./plugins/turk-initial-plugin.js"></script>
+    <script src="./plugins/rotation-plugin.js"></script>
+    <script src="https://uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
+ <script src="./plugins/testing-display-data-plugin.js"></script>
+    <link rel="stylesheet" href="./css/jquery-ui.css"></link>
+    <link rel="stylesheet" href="./css/jspsych.css"></link>
+    <link rel="stylesheet" href="./css/254rep.css"></link>
+  </head>
+  <body>
+    <div id="jspsych-target"></div>
+  </body>
+  <script>
+	//Check if unique participant
+	repeat_worker = false;
+	(function(){
+	    var ut_id = "lampinen-254";
+	    if (UTWorkerLimitReached(ut_id)) {
+		repeat_worker = true;
+		$('#jspsych-target').append("<p style='color:red'><b>You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.</b></p>");
+	    }
+	})(jQuery);
+	
+	if (!repeat_worker) { //Continue with experiment
+
+
+
+//Trials//////////////////////////////////////////////////////////////////////////////////
+	var rotation_test = {
+			type: "rotation",
+			timing_post_trial: 0,
+			prompt: "Press 'f' if the figure is correct, press 'j' if it is incorrect, either rotated the wrong amount, or altered.",
+			correct_response: "correct",
+			response_choices: [70,74],
+			response_mappings: ["correct","incorrect"]
+	};
+
+//Initialize//////////////////////////////////////////////////////////////////////////////////
+
+
+        experiment_structure = [rotation_test];
+
+	jsPsych.init({
+		display_element: $('#jspsych-target'),
+		experiment_structure: experiment_structure 
+	});
+	}
+</script>
+</html>
