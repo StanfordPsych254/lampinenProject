@@ -110,6 +110,7 @@
 		}
 		draw_pinwheel(0);
 
+		var source = null; //Audio source
 		//Positive rotation speeds go CW, negative CCW
 		var animate_pinwheel = function(startTime,rotation_speed,cue_time) {
 			var frame_length = 33; //ms, i.e. 30 fps
@@ -121,9 +122,25 @@
 			}
 			else {
 				context.clearRect(0,0,canvas.width,canvas.height);
+				//stop audio
+				if (source) {
+					source.stop();
+				}
 				//Next phase
 				display_pre_object(trial.object_specifier);
 			}
+		}
+		// play rotation sound:
+		try {
+			source = audio_context.createBufferSource();
+			source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
+			source.connect(audio_context.destination);
+			startTime = audio_context.currentTime + 0.1;
+			source.start(startTime);
+		}
+		catch (err) {
+			console.log("Rotation sound failed to load");
+			source = null;
 		}
 		window.setTimeout(function() {animate_pinwheel((new Date()).getTime(),rotation_speed,cue_time)},33)
 	}
