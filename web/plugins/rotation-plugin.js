@@ -6,6 +6,10 @@
 
         var plugin = {};
 
+	var audio_context = new AudioContext();
+	var sounds = ['./audio/incorrect.mp3'];
+
+	incorrect_sound = jsPsych.pluginAPI.loadAudioFile(sounds[0]);
 
 
         plugin.create = function(params) {
@@ -206,6 +210,21 @@
 			return
 		}
 		this_response = info.key; 
+		response_index = trial.response_choices.indexOf(this_response);
+		if (trial.response_mappings[response_index] == trial.correct_response) {
+			window.alert('Correct!');
+		}
+		else {
+			// play stimulus
+			var source = audio_context.createBufferSource();
+			source.buffer = jsPsych.pluginAPI.getAudioBuffer(incorrect_sound);
+			source.connect(audio_context.destination);
+			startTime = audio_context.currentTime + 0.1;
+			source.start(startTime);
+			window.alert('Wrong.');
+			
+		}
+
 		if (trial.verb_supp_check) {
 			verb_supp_checking = true;
 			context.clearRect(0,0,canvas.width,canvas.height);
