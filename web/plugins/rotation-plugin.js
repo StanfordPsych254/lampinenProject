@@ -8,7 +8,6 @@
 
 	var audio_context = new AudioContext();
 	var sounds = ['./audio/incorrect.mp3'];
-
 	incorrect_sound = jsPsych.pluginAPI.loadAudioFile(sounds[0]);
 
 
@@ -45,7 +44,8 @@
 
 	var consonant_list = ["b", "c", "d", "f", "g", "h",  "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"] 
 		
-	var these_consonants = ["","","",""].map(function() {return consonant_list.splice(Math.floor(Math.random()*20),1);  })
+	var these_consonants = ["","","",""].map(function() {return consonant_list.splice(Math.floor(Math.random()*consonant_list.length),1);  })
+	console.log(these_consonants)
 	var rotation_speed = 0.001; //radians/ms //TODO: select
 		
 		
@@ -191,15 +191,33 @@
 
 	var consonant_correct_count = 0
 	var consonant_check = function(info) { //Called after keypress when checking verbal suppresion, sees if pressed key matches next consonant
-		if ((String.fromCharCode(info.key)).toLowerCase() === these_consonants[consonant_correct_count]) {
+		if (info.key < 65 || info.key > 90) {
+			return
+		}
+		if ((String.fromCharCode(info.key)).toLowerCase() == these_consonants[consonant_correct_count]) {
 			consonant_correct_count++;
+			//console.log(consonant_correct_count)
 			if (consonant_correct_count == 4) {
 				end_function();
 			}
 		}
 		else {
-			//TODO: feedback
-			end_function();
+			// play buzzer
+			try {
+				var source = audio_context.createBufferSource();
+				source.buffer = jsPsych.pluginAPI.getAudioBuffer(incorrect_sound);
+				source.connect(audio_context.destination);
+				startTime = audio_context.currentTime + 0.1;
+				source.start(startTime);
+				source.stop(startTime+0.1); //TODO:remove
+				
+			}
+			catch (err) {
+				//If audio doesn't work, resort to manual feedback
+				window.alert("Sorry, that consonant was incorrect.");
+			}
+			var verb_supp_wrong_delay_time = 3000;//ms
+			window.setTimeout(function(){end_function()} ,verb_supp_wrong_delay_time);
 		}
 
 	}
@@ -212,17 +230,20 @@
 		this_response = info.key; 
 		response_index = trial.response_choices.indexOf(this_response);
 		if (trial.response_mappings[response_index] == trial.correct_response) {
-			window.alert('Correct!');
 		}
 		else {
-			// play stimulus
-			var source = audio_context.createBufferSource();
-			source.buffer = jsPsych.pluginAPI.getAudioBuffer(incorrect_sound);
-			source.connect(audio_context.destination);
-			startTime = audio_context.currentTime + 0.1;
-			source.start(startTime);
-			window.alert('Wrong.');
-			
+			// play buzzer
+			try {
+				var source = audio_context.createBufferSource();
+				source.buffer = jsPsych.pluginAPI.getAudioBuffer(incorrect_sound);
+				source.connect(audio_context.destination);
+				startTime = audio_context.currentTime + 0.1;
+				source.start(startTime);
+			}
+			catch (err) {
+				//If audio doesn't work, resort to manual feedback
+				window.alert("Sorry, the final image was " + trial.correct_response);
+			}
 		}
 
 		if (trial.verb_supp_check) {
