@@ -7,8 +7,9 @@
         var plugin = {};
 
 	var audio_context = new AudioContext();
-	var sounds = ['./audio/incorrect.mp3'];
+	var sounds = ['./audio/incorrect.mp3','./audio/rotation_sound.mp3'];
 	incorrect_sound = jsPsych.pluginAPI.loadAudioFile(sounds[0]);
+	rotation_sound = jsPsych.pluginAPI.loadAudioFile(sounds[1]);
 
 
         plugin.create = function(params) {
@@ -45,7 +46,6 @@
 	var consonant_list = ["b", "c", "d", "f", "g", "h",  "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"] 
 		
 	var these_consonants = ["","","",""].map(function() {return consonant_list.splice(Math.floor(Math.random()*consonant_list.length),1);  })
-	console.log(these_consonants)
 	var rotation_speed = 0.001; //radians/ms //TODO: select
 		
 		
@@ -172,7 +172,23 @@
 		
 		window.setTimeout(function() {
 			context.clearRect(0,0,canvas.width,canvas.height); 
+			// play rotation sound:
+			var source = null;
+			try {
+				source = audio_context.createBufferSource();
+				source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
+				source.connect(audio_context.destination);
+				startTime = audio_context.currentTime + 0.1;
+				source.start(startTime);
+			}
+			catch (err) {
+				console.log("Rotation sound failed to load");
+				source = null;
+			}
 			window.setTimeout(function() {
+				if (source) {
+					source.stop();
+				}
 				display_post_object(object_specifier);
 			},rotation_time)
 		},pre_time)
@@ -209,8 +225,6 @@
 				source.connect(audio_context.destination);
 				startTime = audio_context.currentTime + 0.1;
 				source.start(startTime);
-				source.stop(startTime+0.1); //TODO:remove
-				
 			}
 			catch (err) {
 				//If audio doesn't work, resort to manual feedback
