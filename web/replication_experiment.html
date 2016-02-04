@@ -35,16 +35,22 @@
 	var rotation_test = {
 			type: "rotation",
 			timing_post_trial: 0,
-			correct_response: "correct",
+			trial_type: "swap",
+			rotation_speed: 0.001,
+			rotation_time: 2400,
 			verb_supp_check: true,
 			response_choices: [69,73],
 			response_mappings: ["correct","incorrect"]
+	};
+	var debug_data = {
+			type: "testing-display-data",
+			timing_post_trial: 0
 	};
 
 //Initialize//////////////////////////////////////////////////////////////////////////////////
 
 
-        experiment_structure = [rotation_test];
+        experiment_structure = [rotation_test,debug_data];
 	
 
 	jsPsych.init({

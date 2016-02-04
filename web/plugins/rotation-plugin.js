@@ -11,6 +11,34 @@
 	incorrect_sound = jsPsych.pluginAPI.loadAudioFile(sounds[0]);
 	rotation_sound = jsPsych.pluginAPI.loadAudioFile(sounds[1]);
 
+	rotate_array = function(array, n ) {
+	  array.unshift.apply( array, array.splice( n, array.length ) )
+	  return array;
+	}
+
+	function cyclically_permuted(a,b) {
+		var return_val = false
+		for (i=0; i < a.length;i++) {
+			if (JSON.stringify(rotate_array(b,1)) == JSON.stringify(a)) {
+				return_val = true;
+				break;
+			}
+		}
+		return return_val
+	}
+
+	console.log(cyclically_permuted([0,1,2,3],[0,1,2,3]))
+	console.log(cyclically_permuted([1,2,3,0],[0,1,2,3]))
+	console.log(cyclically_permuted([0,3,2,1],[0,1,2,3]))
+
+
+	function select_new_object_specifier(old_obj_spec) {
+		var new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
+		while (new_obj_spec == old_obj_spec) {
+			new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
+		}
+		return new_obj_spec
+	}
 
         plugin.create = function(params) {
 
@@ -18,16 +46,21 @@
             for (var i = 0; i < trials.length; i++) {
 		var response_choices = (typeof params.response_choices === 'undefined') ? [69,73] : params.response_choices; //keypresses to accept, default is "e","i"
 		var response_mappings =  (typeof params.response_mappings === 'undefined') ? ["correct","incorrect"] : params.response_mappings; //mapping from keypresses to responses
+		var trial_type = (typeof params.trial_type === 'undefined') ? 'correct' : params.trial_type; // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
+		var object_specifier = (typeof params.object_specifier === 'undefined') ? [0,1,2,3] : params.object_specifier;
+		console.log('Object specifier: '+object_specifier)
                 trials[i] = {
                     "timing_post_trial": (typeof params.timing_post_trial === 'undefined') ? 0 : params.timing_post_trial,
 		    "response_choices": response_choices,
 		    "response_mappings": response_mappings, 
                     "prompt": (typeof params.prompt === 'undefined') ? 'Press ' + String.fromCharCode(response_choices[0]) + ' if the figure is ' + response_mappings[0] + ', and press ' + String.fromCharCode(response_choices[1]) + ' if the figure is ' + response_mappings[1] +'.': params.prompt,
-                    "rotation": (typeof params.rotation === 'undefined') ? 'none' : params.rotation, //Rotation "none", "CW", "CCW"
-                    "correct_response": (typeof params.correct_response === 'undefined') ? 'correct' : params.correct_response,
-                    "object_specifier": (typeof params.object_specifier === 'undefined') ? [0,1,2,3] : params.object_specifier,
+                    "rotation_speed": (typeof params.rotation_speed === 'undefined') ? 0 : params.rotation_speed, //Rotation 0 for none, clockwise: positive, counter-clockwise: negative, radians/ms
+                    "rotation_time": (typeof params.rotation_time === 'undefined') ? 800 : params.rotation_time, //Rotation time, 800, 1600, or 2400, ms
+                    "object_specifier": object_specifier, 
+                    "final_object_specifier": (trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
                     "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? false: params.verb_supp_check, //Whether to test recall of consonants on this trial
-                    "trial_type": (typeof params.trial_type === 'undefined') ? 'correct' : params.trial_type // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
+                    "trial_type": trial_type, 
+                    "correct_response": (trial_type === 'correct') ? 'correct' : 'incorrect'
                 };
             }
             return trials;
@@ -38,15 +71,18 @@
 	trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
 	var turkInfo = jsPsych.turk.turkInfo();
 	var start_time = (new Date()).getTime();
+	//Trial variables
+
+
+
 	//State variables////////
-	var trial_done = false;
+	var trial_response_phase = false; //Set to true while awaiting response
 	var verb_supp_checking = false; //set to true while testing consonant memory for verbal suppression
 	/////////////////////////
 
 	var consonant_list = ["b", "c", "d", "f", "g", "h",  "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"] 
 		
 	var these_consonants = ["","","",""].map(function() {return consonant_list.splice(Math.floor(Math.random()*consonant_list.length),1);  })
-	var rotation_speed = 0.001; //radians/ms //TODO: select
 		
 		
 
@@ -63,7 +99,7 @@
 	$('#question-div').append('<br /><br />');
 	$('#question-div').append($('<div>', {
 		"id": "prompt-div",
-		"text": trial.prompt
+		"text": ""
 	}));
 	var canvas = $("#experiment-canvas")[0];
 	var context = canvas.getContext('2d');
@@ -77,10 +113,12 @@
 		context.font = "50px Arial";
 		context.textAlign = "center";
 		context.fillText(these_consonants.join(''),centerX,centerY);
-		window.setTimeout(function(){display_cue(rotation_speed)} ,consonant_present_time);
+		window.setTimeout(function(){display_cue(trial.rotation_speed)} ,consonant_present_time);
+		$('#prompt-div').text('Rehearse these consonants during the task');
 	}
 	//Display the cue image
 	var display_cue = function(rotation_speed) {
+		$('#prompt-div').text('');
 		var cue_time = 2400; //ms
 		var draw_pinwheel = function(angle) {
 			context.clearRect(0,0,canvas.width,canvas.height);
@@ -123,24 +161,26 @@
 			else {
 				context.clearRect(0,0,canvas.width,canvas.height);
 				//stop audio
-				if (source) {
+				if (trial.rotation_speed != 0 && source) {
 					source.stop();
 				}
 				//Next phase
-				display_pre_object(trial.object_specifier);
+				display_pre_object(trial.object_specifier,trial.rotation_time);
 			}
 		}
 		// play rotation sound:
-		try {
-			source = audio_context.createBufferSource();
-			source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
-			source.connect(audio_context.destination);
-			startTime = audio_context.currentTime + 0.1;
-			source.start(startTime);
-		}
-		catch (err) {
-			console.log("Rotation sound failed to load");
-			source = null;
+		if (trial.rotation_speed != 0) {
+			try {
+				source = audio_context.createBufferSource();
+				source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
+				source.connect(audio_context.destination);
+				startTime = audio_context.currentTime + 0.1;
+				source.start(startTime);
+			}
+			catch (err) {
+				console.log("Rotation sound failed to load");
+				source = null;
+			}
 		}
 		window.setTimeout(function() {animate_pinwheel((new Date()).getTime(),rotation_speed,cue_time)},33)
 	}
@@ -184,26 +224,27 @@
 		var pre_time = 500; //ms
 		display_object(object_specifier,0);
 
-		//TODO: set
-		var rotation_time = 800; //ms
+		var rotation_time = trial.rotation_time; //ms
 		
 		window.setTimeout(function() {
 			context.clearRect(0,0,canvas.width,canvas.height); 
 			// play rotation sound:
 			var source = null;
-			try {
-				source = audio_context.createBufferSource();
-				source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
-				source.connect(audio_context.destination);
-				startTime = audio_context.currentTime + 0.1;
-				source.start(startTime);
-			}
-			catch (err) {
-				console.log("Rotation sound failed to load");
-				source = null;
+			if (trial.rotation_speed != 0) {
+				try {
+					source = audio_context.createBufferSource();
+					source.buffer = jsPsych.pluginAPI.getAudioBuffer(rotation_sound);
+					source.connect(audio_context.destination);
+					startTime = audio_context.currentTime + 0.1;
+					source.start(startTime);
+				}
+				catch (err) {
+					console.log("Rotation sound failed to load");
+					source = null;
+				}
 			}
 			window.setTimeout(function() {
-				if (source) {
+				if (trial.rotation_speed != 0 && source) {
 					source.stop();
 				}
 				display_post_object(object_specifier);
@@ -214,12 +255,15 @@
 			
 	}
 	//Display object after rotation/wait/etc.
+	var rt_start_time;
+	var rt;
 	var display_post_object = function(object_specifier) {
-		//TODO: Fix
-		final_object_specifier = object_specifier;
-		final_angle = 1;
-		display_object(final_object_specifier,final_angle);
-		trial_done = true;
+		rt_start_time = (new Date()).getTime();
+		
+		$('#prompt-div').text(trial.prompt);
+		final_angle = trial.rotation_speed*trial.rotation_time;
+		display_object(trial.final_object_specifier,final_angle);
+		trial_response_phase = true;
 	}	
 
 	var consonant_correct_count = 0
@@ -255,12 +299,16 @@
 	
 	var this_response = -1;
 	var trial_response = function(info) {
-		if (!trial_done) {
+		if (!trial_response_phase) {
 			return
 		}
+		var rt_end_time = (new Date()).getTime();
+		rt = rt_end_time - rt_start_time;
+		trial_response_phase = false; //Response received
 		this_response = info.key; 
 		response_index = trial.response_choices.indexOf(this_response);
 		if (trial.response_mappings[response_index] == trial.correct_response) {
+
 		}
 		else {
 			// play buzzer
@@ -294,10 +342,19 @@
 		jsPsych.data.write({
 			"question": trial.prompt,
 			"response_type": trial.response_type,
-			"response_choices": (trial.response_type == 'free') ? [] : trial.response_choices,
 			"correct_response": trial.correct_response,
 			"response": this_response,
-			"trial_time": trial_time
+			"trial_time": trial_time, //Total time the trial took
+			"rt": trial_time, //Reaction time, from post-rotation stimulus presentation until a response key was pressed
+			"response_choices": trial.response_choices,
+			"response_mappings": trial.response_mappings, 
+			"rotation_speed": trial.rotation_speed, 
+			"rotation_time": trial.rotation_time,
+			"object_specifier": trial.object_specifier, 
+			"final_object_specifier": trial.final_object_specifier, 
+			"verb_supp_check": trial.verb_supp_check, 
+			"trial_type": trial.trial_type, 
+			"correct_response": trial.correct_response 
 		});
 
                 jsPsych.pluginAPI.cancelAllKeyboardResponses();
