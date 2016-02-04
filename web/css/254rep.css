@@ -1,6 +1,6 @@
 /*Override width setting for display */
 .jspsych-display-element { 
-    width: 1000px;
+    width: 800px;
     margin: 50px auto 50px auto;
 }
 
@@ -10,7 +10,7 @@
 }
 
 #question-div {
-	display: inline-block; width:800px; vertical-align: top; margin-right:20px; word-wrap: break-word;
+	display: inline-block; width:800px; vertical-align: top; margin-right:0px; word-wrap: break-word; text-align:center;
 }
 
 #prompt-div {
