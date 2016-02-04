@@ -27,14 +27,10 @@
 		return return_val
 	}
 
-	console.log(cyclically_permuted([0,1,2,3],[0,1,2,3]))
-	console.log(cyclically_permuted([1,2,3,0],[0,1,2,3]))
-	console.log(cyclically_permuted([0,3,2,1],[0,1,2,3]))
-
 
 	function select_new_object_specifier(old_obj_spec) {
 		var new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
-		while (new_obj_spec == old_obj_spec) {
+		while (cyclically_permuted(new_obj_spec, old_obj_spec)) {
 			new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
 		}
 		return new_obj_spec
@@ -48,7 +44,6 @@
 		var response_mappings =  (typeof params.response_mappings === 'undefined') ? ["correct","incorrect"] : params.response_mappings; //mapping from keypresses to responses
 		var trial_type = (typeof params.trial_type === 'undefined') ? 'correct' : params.trial_type; // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
 		var object_specifier = (typeof params.object_specifier === 'undefined') ? [0,1,2,3] : params.object_specifier;
-		console.log('Object specifier: '+object_specifier)
                 trials[i] = {
                     "timing_post_trial": (typeof params.timing_post_trial === 'undefined') ? 0 : params.timing_post_trial,
 		    "response_choices": response_choices,
@@ -257,11 +252,18 @@
 	//Display object after rotation/wait/etc.
 	var rt_start_time;
 	var rt;
+	var final_angle;
 	var display_post_object = function(object_specifier) {
 		rt_start_time = (new Date()).getTime();
 		
 		$('#prompt-div').text(trial.prompt);
 		final_angle = trial.rotation_speed*trial.rotation_time;
+		if (trial.trial_type == "rotate") { //If rotation error
+			var angle_range = 1.75*Math.PI;
+			var angle_lower_bound = 0.125*Math.PI; 
+			final_angle = final_angle + Math.random()*angle_range+angle_lower_bound; 
+			console.log(final_angle)
+		}
 		display_object(trial.final_object_specifier,final_angle);
 		trial_response_phase = true;
 	}	
@@ -340,7 +342,7 @@
 
 		
 		jsPsych.data.write({
-			"question": trial.prompt,
+			"prompt": trial.prompt,
 			"response_type": trial.response_type,
 			"correct_response": trial.correct_response,
 			"response": this_response,
@@ -352,7 +354,10 @@
 			"rotation_time": trial.rotation_time,
 			"object_specifier": trial.object_specifier, 
 			"final_object_specifier": trial.final_object_specifier, 
+			"final_angle": final_angle, 
 			"verb_supp_check": trial.verb_supp_check, 
+			"consonant_correct_count": consonant_correct_count, 
+			"verb_supp_consonants": these_consonants,
 			"trial_type": trial.trial_type, 
 			"correct_response": trial.correct_response 
 		});

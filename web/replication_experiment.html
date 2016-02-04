@@ -32,16 +32,41 @@
 
 
 //Trials//////////////////////////////////////////////////////////////////////////////////
-	var rotation_test = {
+	var rotation_test_0 = {
+			type: "rotation",
+			timing_post_trial: 0,
+			trial_type: "rotate",
+			rotation_speed: 0.001,
+			rotation_time: 1600,
+			verb_supp_check: true,
+			response_choices: [69,73],
+			response_mappings: ["correct","incorrect"]
+	};
+
+	var rotation_test_1 = {
 			type: "rotation",
 			timing_post_trial: 0,
 			trial_type: "swap",
-			rotation_speed: 0.001,
+			rotation_speed: 0,
 			rotation_time: 2400,
 			verb_supp_check: true,
 			response_choices: [69,73],
 			response_mappings: ["correct","incorrect"]
 	};
+
+	var rotation_test_2 = {
+			type: "rotation",
+			timing_post_trial: 0,
+			trial_type: "correct",
+			object_specifier: [1,3,2,0],
+			rotation_speed: -0.002,
+			rotation_time: 800,
+			verb_supp_check: true,
+			response_choices: [69,73],
+			response_mappings: ["correct","incorrect"]
+	};
+
+
 	var debug_data = {
 			type: "testing-display-data",
 			timing_post_trial: 0
@@ -50,7 +75,7 @@
 //Initialize//////////////////////////////////////////////////////////////////////////////////
 
 
-        experiment_structure = [rotation_test,debug_data];
+        experiment_structure = [rotation_test_0,rotation_test_1,rotation_test_2,debug_data];
 	
 
 	jsPsych.init({
