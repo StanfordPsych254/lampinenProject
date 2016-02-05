@@ -280,10 +280,12 @@
 			consonant_correct_count++;
 			//console.log(consonant_correct_count)
 			if (consonant_correct_count == 4) {
+				verb_supp_checking = false;
 				end_function();
 			}
 		}
 		else {
+			verb_supp_checking = false;
 			// play buzzer
 			try {
 				var source = audio_context.createBufferSource();
