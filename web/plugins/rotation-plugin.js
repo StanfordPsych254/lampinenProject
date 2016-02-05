@@ -53,6 +53,7 @@
                     "rotation_time": (typeof params.rotation_time === 'undefined') ? 800 : params.rotation_time, //Rotation time, 800, 1600, or 2400, ms
                     "object_specifier": object_specifier, 
                     "final_object_specifier": (trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
+                    "initial_angle": (typeof params.initial_angle === 'undefined') ? 0 : params.initial_angle, //Initial angle of object, in radians.
                     "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? false: params.verb_supp_check, //Whether to test recall of consonants on this trial
                     "trial_type": trial_type, 
                     "correct_response": (trial_type === 'correct') ? 'correct' : 'incorrect'
@@ -217,7 +218,7 @@
 	//Display object before rotation/wait/etc.
 	var display_pre_object = function(object_specifier,rotation_time) {
 		var pre_time = 500; //ms
-		display_object(object_specifier,0);
+		display_object(object_specifier,trial.initial_angle);
 
 		var rotation_time = trial.rotation_time; //ms
 		
@@ -257,12 +258,14 @@
 		rt_start_time = (new Date()).getTime();
 		
 		$('#prompt-div').text(trial.prompt);
-		final_angle = trial.rotation_speed*trial.rotation_time;
 		if (trial.trial_type == "rotate") { //If rotation error
 			var rotation_times = [800,1600,2400];
 			rotation_times.splice(rotation_times.indexOf(trial.rotation_time),1);	
 			var r = Math.floor(2*Math.random()); //Select a random rotation time from the other two options
-			final_angle = trial.rotation_speed*rotation_times[r]; 
+			final_angle = trial.initial_angle + trial.rotation_speed*rotation_times[r]; 
+		}
+		else {
+			final_angle = trial.initial_angle+trial.rotation_speed*trial.rotation_time;
 		}
 		display_object(trial.final_object_specifier,final_angle);
 		trial_response_phase = true;
@@ -353,6 +356,7 @@
 			"rotation_speed": trial.rotation_speed, 
 			"rotation_time": trial.rotation_time,
 			"object_specifier": trial.object_specifier, 
+			"initial_angle": trial.initial_angle,
 			"final_object_specifier": trial.final_object_specifier, 
 			"final_angle": final_angle, 
 			"verb_supp_check": trial.verb_supp_check, 
