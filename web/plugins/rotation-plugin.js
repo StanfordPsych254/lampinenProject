@@ -259,10 +259,10 @@
 		$('#prompt-div').text(trial.prompt);
 		final_angle = trial.rotation_speed*trial.rotation_time;
 		if (trial.trial_type == "rotate") { //If rotation error
-			var angle_range = 1.75*Math.PI;
-			var angle_lower_bound = 0.125*Math.PI; 
-			final_angle = final_angle + Math.random()*angle_range+angle_lower_bound; 
-			console.log(final_angle)
+			var rotation_times = [800,1600,2400];
+			rotation_times.splice(rotation_times.indexOf(trial.rotation_time),1);	
+			var r = Math.floor(2*Math.random()); //Select a random rotation time from the other two options
+			final_angle = trial.rotation_speed*rotation_times[r]; 
 		}
 		display_object(trial.final_object_specifier,final_angle);
 		trial_response_phase = true;

@@ -27,7 +27,7 @@
 	var turkInfo = jsPsych.turk.turkInfo();
 	var start_time = (new Date()).getTime();
 
-	display_element.append('<div id="question-div">'+trial.text+'<br /><br /></div>');
+	display_element.append('<div id="question-div"><div id="instructions-div">'+trial.text+'</div><br /><br /></div>');
 	var end_function = function() {
 		var end_time = (new Date()).getTime();
 		var rt = end_time - start_time;
