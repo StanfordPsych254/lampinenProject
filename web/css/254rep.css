@@ -4,6 +4,22 @@ body {
 	color: #ffffff;
 }
 
+body a:link {
+	color:#bbbbff;
+}
+
+body a:visited {
+	color:#bbbbff;
+}
+
+body a:hover {
+	color:#ffbbbb;
+}
+
+body div {
+	text-align: center;
+}
+
 .jspsych-display-element { 
     width: 800px;
     margin: 50px auto 50px auto;

@@ -45,15 +45,13 @@
 	var initial_page = {
 		type: 'turk-initial',
 		timing_post_trial: 0,
-		intro_text: 'By answering the following questions, you are participating in a study being performed by the Stanford Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:stanfordpysch254@gmail.com">stanfordpysch254@gmail.com</a>. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. Note however that we have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241">here</a>.'
+		intro_text: 'By answering the following questions, you are participating in a study being performed by the Stanford Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:stanfordpysch254@gmail.com">stanfordpysch254@gmail.com</a>. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. Note however that we have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241" target="_blank">here</a>.'
 	};
 
 
-	var instructions = {
+	var initial_instructions = {
 			type: "instructions",
 			text: "Instructions: This experiment will consist of a training/practice phase, and then a set of testing trials. On each trial, you will be presented with a set of four consonants. Verbally rehearse these consonants during the remainder of the trial. Next, you will be presented with a cue (a pinwheel), which will either be rotating or still. If the pinwheel is rotating, you will also hear a sound of rotation. If the pinwheel is rotating, try to remember the speed at which it is rotating (the total amount it rotates is irrelevant). Next, you will be shown an object consisting of four colored bars in the shape of a +. Then, the object will be hidden (pretend that a curtain drops between you and the image), and there will be a delay period. If the pinwheel was rotating, you will hear the rotation sound, and try to mentally rotate the object for the time that it is hidden, at the same rate that the pinwheel rotated. At an unpredictable point, the curtain will be raised, and the object will be revealed. Your task is to determine whether the object shown is the same as the original one (none of the bars of the + have been switched), and if it has rotated the correct amount. If the pinwheel was not rotating, you do not have to perform the mental rotation, and you only have to check if the object is the same, it will not have been rotated. If you respond incorrectly, you will hear a buzzer. You will be tested at the end of some (randomly chosen) trials on your memory of the consonants you were shown at the beginning. If you do not recall the consonants correctly, you will hear a buzzer, and be forced to wait for a few seconds before continuing with the experiment. This can all sound a little intimidating, but once you go through the training, it will seem easier.<br /><br />Click continue when you are ready to begin the training phase of the experiment.",
-			type: "rotation",
-			timing_post_trial: 500,
 			timing_post_trial: 500
 	};
 	
@@ -534,8 +532,9 @@
 
 //Initialize//////////////////////////////////////////////////////////////////////////////////
 
-        experiment_structure = [initial_page,instructions,training_block,practice_instructions,practice_block,begin_testing_instructions,block_1,block_2,debug_data];
+        experiment_structure = [initial_page,initial_instructions,training_block,practice_instructions,practice_block,begin_testing_instructions,block_1,block_2,bg_block,debug_data];
 	
+	console.log(experiment_structure)
 
 	jsPsych.init({
 		display_element: $('#jspsych-target'),
