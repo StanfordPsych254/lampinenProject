@@ -30,13 +30,21 @@
 	var prev_data = jsPsych.data.getLastTrialData();
 	var text_displayed = '';
 	
-	if (prev_data.response == prev_data.correct_response) {
+	if (prev_data.response_mappings[prev_data.response_choices.indexOf(prev_data.response)] == prev_data.correct_response) {
 		text_displayed = trial.correct_text;	
 		display_element.append('<div id="question-div">'+trial.correct_text+'<br /><br /></div>');
 	} 
 	else {
 		text_displayed = trial.incorrect_text;	
 		display_element.append('<div id="question-div">'+trial.incorrect_text+'<br /><br /></div>');
+	}
+	if (prev_data.verb_supp_check) {
+		if (prev_data.consonant_correct_count == 4) {
+			$('#question-div').append('You remembered the consonants correctly.<br /><br />');
+		}
+		else {
+			$('#question-div').append('You did not remember the consonants correctly.<br /><br />');
+		}
 	}
 
 	var end_function = function() {

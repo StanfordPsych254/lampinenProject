@@ -27,15 +27,21 @@
 		return return_val
 	}
 
+	function random_object_specifier() {
+		var old_obj_spec = [0,1,2,3];
+		return [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);[0]  })
+	}
+
 
 	function select_new_object_specifier(old_obj_spec) {
-		var new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
+		var new_obj_spec = random_object_specifier(); 
 		while (cyclically_permuted(new_obj_spec, old_obj_spec)) {
-			new_obj_spec = [-1,-1,-1,-1].map(function() {return old_obj_spec.splice(Math.floor(Math.random()*old_obj_spec.length),1);  })
+			new_obj_spec = random_object_specifier();
 		}
 		return new_obj_spec
 	}
 
+	twopi = 2*Math.PI;
         plugin.create = function(params) {
 
             var trials = new Array(1);
@@ -43,7 +49,7 @@
 		var response_choices = (typeof params.response_choices === 'undefined') ? [69,73] : params.response_choices; //keypresses to accept, default is "e","i"
 		var response_mappings =  (typeof params.response_mappings === 'undefined') ? ["correct","incorrect"] : params.response_mappings; //mapping from keypresses to responses
 		var trial_type = (typeof params.trial_type === 'undefined') ? 'correct' : params.trial_type; // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
-		var object_specifier = (typeof params.object_specifier === 'undefined') ? [0,1,2,3] : params.object_specifier;
+		var object_specifier = (typeof params.object_specifier === 'undefined') ? random_object_specifier() : params.object_specifier;
                 trials[i] = {
                     "timing_post_trial": (typeof params.timing_post_trial === 'undefined') ? 0 : params.timing_post_trial,
 		    "response_choices": response_choices,
@@ -53,8 +59,8 @@
                     "rotation_time": (typeof params.rotation_time === 'undefined') ? 800 : params.rotation_time, //Rotation time, 800, 1600, or 2400, ms
                     "object_specifier": object_specifier, 
                     "final_object_specifier": (trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
-                    "initial_angle": (typeof params.initial_angle === 'undefined') ? 0 : params.initial_angle, //Initial angle of object, in radians.
-                    "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? false: params.verb_supp_check, //Whether to test recall of consonants on this trial
+                    "initial_angle": (typeof params.initial_angle === 'undefined') ? Math.random() * twopi : params.initial_angle, //Initial angle of object, in radians.
+                    "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? ((Math.random() < 0.25) ? true : false ) : params.verb_supp_check, //Whether to test recall of consonants on this trial
                     "trial_type": trial_type, 
                     "correct_response": (trial_type === 'correct') ? 'correct' : 'incorrect'
                 };
@@ -108,6 +114,7 @@
 		context.clearRect(0,0,canvas.width,canvas.height);
 		context.font = "50px Arial";
 		context.textAlign = "center";
+		context.fillStyle = "white";
 		context.fillText(these_consonants.join(''),centerX,centerY);
 		window.setTimeout(function(){display_cue(trial.rotation_speed)} ,consonant_present_time);
 		$('#prompt-div').text('Rehearse these consonants during the task');
@@ -272,10 +279,18 @@
 	}	
 
 	var consonant_correct_count = 0
+	var consonants_typed = ""
 	var consonant_check = function(info) { //Called after keypress when checking verbal suppresion, sees if pressed key matches next consonant
 		if (info.key < 65 || info.key > 90) {
 			return
 		}
+		consonants_typed += (String.fromCharCode(info.key)).toLowerCase() 
+		context.clearRect(0,0,canvas.width,canvas.height);
+		context.font = "50px Arial";
+		context.textAlign = "center";
+		context.fillStyle = "white";
+		context.fillText(consonants_typed,centerX,centerY);
+
 		if ((String.fromCharCode(info.key)).toLowerCase() == these_consonants[consonant_correct_count]) {
 			consonant_correct_count++;
 			//console.log(consonant_correct_count)
@@ -332,7 +347,7 @@
 			}
 		}
 
-		if (trial.verb_supp_check) {
+		if (trial.verb_supp_check === true) {
 			verb_supp_checking = true;
 			context.clearRect(0,0,canvas.width,canvas.height);
 			$('#prompt-div').text("Please type the consonants that you were shown at the beginning of the trial");

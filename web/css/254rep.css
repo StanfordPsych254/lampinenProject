@@ -1,6 +1,7 @@
 /*Override width setting for display */
 body {
 	background-color: #505050;
+	color: #ffffff;
 }
 
 .jspsych-display-element { 

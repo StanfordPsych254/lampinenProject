@@ -8,6 +8,8 @@
     <script src="./plugins/turk-initial-plugin.js" type="text/javascript"></script>
     <script src="./plugins/rotation-plugin.js" type="text/javascript"></script>
     <script src="./plugins/instructions-plugin.js" type="text/javascript"></script>
+    <script src="./plugins/question-plugin.js" type="text/javascript"></script>
+    <script src="./plugins/feedback-plugin.js" type="text/javascript"></script>
     <script src="https://uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
  <script src="./plugins/testing-display-data-plugin.js"></script>
     <link rel="stylesheet" href="./css/jquery-ui.css"></link>
@@ -30,50 +32,471 @@
 	
 	if (!repeat_worker) { //Continue with experiment
 
+//Functions/////////////////////////////////////////////////////////////////////////
+
+        function shuffle_array(old_array) {
+                var new_array =[-1,-1,-1,-1].map(function() {return old_array.splice(Math.floor(Math.random()*old_array.length),1)[0];  }); 
+                return new_array
+        }
+
 
 
 //Trials//////////////////////////////////////////////////////////////////////////////////
+	var initial_page = {
+		type: 'turk-initial',
+		timing_post_trial: 0,
+		intro_text: 'By answering the following questions, you are participating in a study being performed by the Stanford Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:stanfordpysch254@gmail.com">stanfordpysch254@gmail.com</a>. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. Note however that we have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href='https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241'>here</a>.'
+	};
+
+
 	var instructions = {
 			type: "instructions",
-			text: "Instructions: On each trial, you will be presented with a set of four consonants. Verbally rehearse these consonants during the remainder of the trial. Next, you will be presented with a cue (a pinwheel), which will either be static or rotating. If the pinwheel is rotating, you will also hear a sound of rotation. If the pinwheel is rotating, try to remember the speed at which it is rotating (the total amount it rotates is irrelevant). Next, you will be shown an object consisting of four colored bars in the shape of a +. Then, the object will be hidden (pretend that a curtain drops between you and the image), and there will be a delay period. If the pinwheel was rotating, you will hear the rotation sound, and try to mentally rotate the object for the time that it is hidden, at the same rate that the pinwheel rotated. At an unpredictable point, the curtain will be raised, and another object will be revealed. Your task is to determine whether the object shown is the same as the original argument (none of the bars of the + have been switched), and if it has rotated the correct amount. If the pinwheel was not rotating, you do not have to perform the mental rotation, and you only have to check if the object is the same, it will not have been rotated. You will be tested unpredictably at the end of some trials on your memory for the consonants you were shown at the beginning. <br /><br />Click continue when you are ready to begin.",
-			timing_post_trial: 2000
-	};
-
-	var rotation_test_0 = {
+			text: "Instructions: This experiment will consist of a training/practice phase, and then a set of testing trials. On each trial, you will be presented with a set of four consonants. Verbally rehearse these consonants during the remainder of the trial. Next, you will be presented with a cue (a pinwheel), which will either be rotating or still. If the pinwheel is rotating, you will also hear a sound of rotation. If the pinwheel is rotating, try to remember the speed at which it is rotating (the total amount it rotates is irrelevant). Next, you will be shown an object consisting of four colored bars in the shape of a +. Then, the object will be hidden (pretend that a curtain drops between you and the image), and there will be a delay period. If the pinwheel was rotating, you will hear the rotation sound, and try to mentally rotate the object for the time that it is hidden, at the same rate that the pinwheel rotated. At an unpredictable point, the curtain will be raised, and the object will be revealed. Your task is to determine whether the object shown is the same as the original one (none of the bars of the + have been switched), and if it has rotated the correct amount. If the pinwheel was not rotating, you do not have to perform the mental rotation, and you only have to check if the object is the same, it will not have been rotated. If you respond incorrectly, you will hear a buzzer. You will be tested at the end of some (randomly chosen) trials on your memory of the consonants you were shown at the beginning. If you do not recall the consonants correctly, you will hear a buzzer, and be forced to wait for a few seconds before continuing with the experiment. This can all sound a little intimidating, but once you go through the training, it will seem easier.<br /><br />Click continue when you are ready to begin the training phase of the experiment.",
 			type: "rotation",
-			timing_post_trial: 2000,
-			trial_type: "rotate",
-			initial_angle: 0.3,
-			rotation_speed: 0.00087,
-			rotation_time: 1600,
-			verb_supp_check: true,
-			response_choices: [69,73],
-			response_mappings: ["correct","incorrect"]
+			timing_post_trial: 500,
+			timing_post_trial: 500
 	};
+	
+	//Training 	
 
-	var rotation_test_1 = {
+	var training_1 = {
 			type: "rotation",
-			timing_post_trial: 2000,
-			trial_type: "swap",
-			initial_angle: -1,
-			rotation_speed: 0,
-			rotation_time: 2400,
-			verb_supp_check: false,
-			response_choices: [69,73],
-			response_mappings: ["correct","incorrect"]
-	};
-
-	var rotation_test_2 = {
-			type: "rotation",
-			timing_post_trial: 2000,
+			timing_post_trial: 500,
 			trial_type: "correct",
-			object_specifier: [1,3,2,0],
-			rotation_speed: -0.00087,
-			rotation_time: 800,
-			verb_supp_check: true,
-			response_choices: [69,73],
-			response_mappings: ["correct","incorrect"]
+			rotation_speed: 0.00087,
+			object_specifier: [0,1,2,3],
+			initial_angle: 0.5,
+			verb_supp_check: false,
+			rotation_time: 800
 	};
+
+	var training_1_f = {
+			type: "feedback",
+			correct_text: "Correct! The object was rotated correctly, and none of the bars changed positions.",
+			incorrect_text: "Sorry, you responded 'Incorrect', but the object was rotated correctly, and none of the bars changed positions.",
+			timing_post_trial: 500
+	};
+
+	var training_2 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			object_specifier: [1,3,0,2],
+			final_object_specifier: [0,1,3,2],
+			initial_angle: 0.1,
+			verb_supp_check: false,
+			rotation_time: 1600
+	};
+
+	var training_2_f = {
+			type: "feedback",
+			correct_text: "Correct! The bars changed positions.",
+			incorrect_text: "Sorry, you responded 'Correct', but in fact the object's bars changed positions.",
+			timing_post_trial: 500
+	};
+
+	var training_3 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotate",
+			rotation_speed: -0.00087,
+			object_specifier: [1,2,0,3],
+			initial_angle: 0.6,
+			verb_supp_check: true,
+			rotation_time: 2400
+	};
+
+	var training_3_f = {
+			type: "feedback",
+			correct_text: "Correct! The object did not rotate the correct amount.",
+			incorrect_text: "Sorry, you responded 'Correct', but in fact the object did not rotate the correct amount. Make sure that you mentally rotate the object at the same speed the pinwheel was rotating, for the whole time the object is hidden.",
+			timing_post_trial: 500
+	};
+
+	var training_4 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0.00087,
+			object_specifier: [1,2,0,3],
+			initial_angle: 0,
+			verb_supp_check: false,
+			rotation_time: 800
+	};
+
+	var training_4_f = {
+			type: "feedback",
+			correct_text: "Correct! The bars changed positions.",
+			incorrect_text: "Sorry, you responded 'Correct', but in fact the object's bars changed positions.",
+			timing_post_trial: 500
+	};
+
+	var training_5 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0,
+			object_specifier: [3,2,1,0],
+			initial_angle: 0.7,
+			verb_supp_check: true,
+			rotation_time: 2400
+	};
+
+	var training_5_f = {
+			type: "feedback",
+			correct_text: "Correct! The bars on the object did not change positions.",
+			incorrect_text: "Sorry, you responded 'Incorrect', but in fact the object's bars did not change positions.",
+			timing_post_trial: 500
+	};
+
+	var training_6 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: -0.00087,
+			object_specifier: [1,2,3,0],
+			initial_angle: 0.2,
+			verb_supp_check: false,
+			rotation_time: 2400
+	};
+
+	var training_6_f = {
+			type: "feedback",
+			correct_text: "Thats right! The object was rotated an incorrect amount.",
+			incorrect_text: "Sorry, you responded 'Correct', but in fact the object was rotated an incorrect amount.",
+			timing_post_trial: 500
+	};
+
+
+	//Practice
+	var practice_instructions = {
+			type: "instructions",
+			text: "Great! We'll give you a few more trials to practice before you start the experiment. Click 'Continue' to begin the practice section.",
+			timing_post_trial: 500
+	};
+	
+	var practice_1 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0.00087,
+			object_specifier: [1,0,2,3],
+			initial_angle: 0.55,
+			verb_supp_check: false,
+			rotation_time: 800
+	};
+
+	var practice_2 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: -0.00087,
+			object_specifier: [0,3,1,2],
+			initial_angle: 0.11,
+			verb_supp_check: false,
+			rotation_time: 2400
+	};
+
+	var practice_3 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: -0.00087,
+			object_specifier: [0,3,1,2],
+			initial_angle: 0.4,
+			verb_supp_check: true,
+			rotation_time: 1600
+	};
+
+	var practice_4 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0,
+			object_specifier: [3,0,2,1],
+			initial_angle: -0.1,
+			verb_supp_check: false,
+			rotation_time: 2400
+	};
+
+	var practice_5 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0.00087,
+			object_specifier: [2,0,3,1],
+			initial_angle: 0.23,
+			verb_supp_check: false,
+			rotation_time: 800
+	};
+
+	var practice_6 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: 0.00087,
+			object_specifier: [1,2,3,0],
+			initial_angle: 0.62,
+			verb_supp_check: false,
+			rotation_time: 800
+	};
+
+	var practice_7 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			object_specifier: [0,2,3,1],
+			initial_angle: -0.22,
+			verb_supp_check: false,
+			rotation_time: 1600
+	};
+
+	var practice_8 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0.00087,
+			object_specifier: [1,3,0,2],
+			initial_angle: -0.5,
+			verb_supp_check: true,
+			rotation_time: 2400
+	};
+
+	//real experiment begins here
+	var begin_testing_instructions = {
+			type: "instructions",
+			text: "You've completed the practice section! Click 'Continue' to proceed.",
+			timing_post_trial: 500
+	};
+
+	//CW, correct
+	var trial_1 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0.00087,
+			rotation_time: 800
+	};
+
+	var trial_2 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_3 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: 0.00087,
+			rotation_time: 2400
+	};
+
+	//CW, incorrect, swap
+	var trial_4 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0.00087,
+			rotation_time: 800
+	};
+
+	var trial_5 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_6 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0.00087,
+			rotation_time: 2400
+	};
+
+	//CW, incorrect, orientation
+	var trial_7 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: 0.00087,
+			rotation_time: 800
+	};
+
+	var trial_8 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: 0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_9 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: 0.00087,
+			rotation_time: 2400
+	};
+
+	//CCW, correct
+	var trial_10 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: -0.00087,
+			rotation_time: 800
+	};
+
+	var trial_11 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: -0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_12 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "correct",
+			rotation_speed: -0.00087,
+			rotation_time: 2400
+	};
+
+
+	//CCW, incorrect, swap
+	var trial_13 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: -0.00087,
+			rotation_time: 800
+	};
+
+	var trial_14 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: -0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_15 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: -0.00087,
+			rotation_time: 2400
+	};
+
+	//CCW, incorrect, orientation
+	var trial_16 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: -0.00087,
+			rotation_time: 800
+	};
+
+	var trial_17 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: -0.00087,
+			rotation_time: 1600
+	};
+
+	var trial_18 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "rotation",
+			rotation_speed: -0.00087,
+			rotation_time: 2400
+	};
+
+	//no rotation, correct
+	var trial_19 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 800
+	};
+
+	var trial_20 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 1600
+	};
+
+	var trial_21 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 2400
+	};
+
+	//no rotation, inswap (swap)
+	var trial_22 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 800
+	};
+
+	var trial_23 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 1600
+	};
+
+	var trial_24 = {
+			type: "rotation",
+			timing_post_trial: 500,
+			trial_type: "swap",
+			rotation_speed: 0,
+			rotation_time: 2400
+	};
+
+
+	var bg_intro = {
+		type: 'instructions',
+		timing_post_trial: 0,
+		text: 'Thanks for participating. We would like to ask you some final questions. Please press "Continue" to continue.'
+	};
+
+	var bg_1 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "What is/are your native language(s)? (The languages spoken in your household when you were a child.)",
+			correct_response: "",
+			response_type: "free"
+	};
+
+	var bg_2 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "Do you have any comments on this HIT?",
+			force_response: false,
+			correct_response: "",
+			response_type: "free"
+	};
+
+
 
 
 	var debug_data = {
@@ -81,10 +504,37 @@
 			timing_post_trial: 0
 	};
 
+	//trial Blocks
+	var training_block = { 
+		chunk_type: 'linear',
+		timeline: [training_1,training_1_f,training_2,training_2_f,training_3,training_3_f,training_4,training_4_f,training_5,training_5_f,training_6,training_6_f] 
+	}; 
+
+	var practice_block = { 
+		chunk_type: 'linear',
+		timeline: [practice_1,practice_2,practice_3,practice_4,practice_5,practice_6,practice_7,practice_8] 
+	}; 
+
+
+	var block_1 = { 
+		chunk_type: 'linear',
+		timeline: shuffle_array([trial_1,trial_2,trial_3,trial_1,trial_2,trial_3,trial_4,trial_5,trial_6,trial_7,trial_8,trial_9,trial_10,trial_11,trial_12,trial_10,trial_11,trial_12,trial_13,trial_14,trial_15,trial_16,trial_17,trial_18,trial_19,trial_20,trial_21,trial_19,trial_20,trial_21,trial_22,trial_23,trial_24]) //Note that correct trials (1,2,3), (10,11,12), and (19,20,21) are repeated, for a total of 36 trials/block
+	}; 
+
+	var block_2 = { 
+		chunk_type: 'linear',
+		timeline: shuffle_array([trial_1,trial_2,trial_3,trial_1,trial_2,trial_3,trial_4,trial_5,trial_6,trial_7,trial_8,trial_9,trial_10,trial_11,trial_12,trial_10,trial_11,trial_12,trial_13,trial_14,trial_15,trial_16,trial_17,trial_18,trial_19,trial_20,trial_21,trial_19,trial_20,trial_21,trial_22,trial_23,trial_24]) //Note that correct trials (1,2,3), (10,11,12), and (19,20,21) are repeated, for a total of 36 trials/block
+	}; 
+
+	var bg_block = {
+		chunk_type: 'linear',
+		timeline: [bg_intro,bg_1]
+	};
+
+
 //Initialize//////////////////////////////////////////////////////////////////////////////////
 
-
-        experiment_structure = [instructions,rotation_test_0,rotation_test_1,rotation_test_2,debug_data];
+        experiment_structure = [initial_page,instructions,training_block,practice_instructions,practice_block,begin_testing_instructions,block_1,block_2,debug_data];
 	
 
 	jsPsych.init({
