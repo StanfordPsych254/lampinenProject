@@ -21,6 +21,7 @@
             		trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
 	
 			jsPsych.data.displayData('json');			
+			jsPsych.data.localSave('test_data.json','json');
 
 			display_element.append($('<button>', {
 				"id": "jspsych-experiment-submit-button",
