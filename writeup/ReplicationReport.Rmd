@@ -44,10 +44,14 @@ These procedures were followed directly, except the following differences.
 
 ###Analysis Plan
 
-We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We will discard participants who have less than 75% accuracy in the verbal suppression task, and replace them to maintain the sample size. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. We will also compute the secondary analyses that the authors did, analyzing the effect of the length of the blank interval on overall capacity, and an accuracy (rather than capacity) based analysis of the main effect. 
+We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We will discard participants who have less than 75% accuracy in the verbal suppression task, and replace them to maintain the sample size. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. 
 
 ###Differences from Original Study
 
 1. We collected data on Amazon's Mechanical Turk, instead of in a laboratory. This changed the sample population, and reduced control over the testing environment and the display (e.g. the subject might have completed the experiment on a 70" tv in front of them, or on a tablet on their lap). We do not expect this to have significantly altered the results, because the stimuli were correspondingly reproduced, and the viewing environment should have little effect on mental capacity. Research such as (Buhrmester, Kwang, and Gosling, Perspectives on Psychological Science, 2011) suggests that data from Mechanical Turk are reasonably reliable, and we are aware of no reason to suspect that the results would be different for this particular task.
 
 2. We reduced the length of the study (and compensated by recruiting more participants), to make the study more appealing to Mechanical Turk workers. This necessitated reducing the original design by randomizing the choice of swap on the foil swap trials, instead of fully crossing it. We do not expect this to affect the results, since there are still a large number of trials in each experiment, and there are only six possible swaps.
+
+
+Analysis
+---------------
