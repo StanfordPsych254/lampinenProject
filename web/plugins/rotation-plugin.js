@@ -62,6 +62,7 @@
                     "initial_angle": (typeof params.initial_angle === 'undefined') ? Math.random() * twopi : params.initial_angle, //Initial angle of object, in radians.
                     "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? ((Math.random() < 0.25) ? true : false ) : params.verb_supp_check, //Whether to test recall of consonants on this trial
                     "trial_type": trial_type, 
+                    "practice_trial": (typeof params.practice_trial === 'undefined') ? false : true, //Practice trial indicator
                     "correct_response": (trial_type === 'correct') ? 'correct' : 'incorrect'
                 };
             }
@@ -380,6 +381,7 @@
 			"consonant_correct_count": consonant_correct_count, 
 			"verb_supp_consonants": these_consonants,
 			"trial_type": trial.trial_type, 
+			"practice_trial": trial.practice_trial, 
 			"correct_response": trial.correct_response 
 		});
 
