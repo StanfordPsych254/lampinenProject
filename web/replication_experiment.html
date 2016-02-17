@@ -34,8 +34,17 @@
 
 //Functions/////////////////////////////////////////////////////////////////////////
 
+
+	function range(n) {
+		var l = []
+		for (var i= 0; i < n; i++) {
+			l[i] = i
+		}
+		return l
+	}
+
         function shuffle_array(old_array) {
-                var new_array =[-1,-1,-1,-1].map(function() {return old_array.splice(Math.floor(Math.random()*old_array.length),1)[0];  }); 
+                var new_array = (range(old_array.length)).map(function() {return old_array.splice(Math.floor(Math.random()*old_array.length),1)[0];  }); 
                 return new_array
         }
 
@@ -445,7 +454,7 @@
 			rotation_time: 2400
 	};
 
-	//no rotation, inswap (swap)
+	//no rotation, incorrect (swap)
 	var trial_22 = {
 			type: "rotation",
 			timing_post_trial: 500,
@@ -524,6 +533,9 @@
 		timeline: shuffle_array([trial_1,trial_2,trial_3,trial_1,trial_2,trial_3,trial_4,trial_5,trial_6,trial_7,trial_8,trial_9,trial_10,trial_11,trial_12,trial_10,trial_11,trial_12,trial_13,trial_14,trial_15,trial_16,trial_17,trial_18,trial_19,trial_20,trial_21,trial_19,trial_20,trial_21,trial_22,trial_23,trial_24]) //Note that correct trials (1,2,3), (10,11,12), and (19,20,21) are repeated, for a total of 36 trials/block
 	}; 
 
+
+	console.log(block_1.timeline)
+	console.log(block_2)
 	var bg_block = {
 		chunk_type: 'linear',
 		timeline: [bg_intro,bg_1,bg_2]
