@@ -38,7 +38,9 @@ The original paper's procedures were:
 These procedures were followed directly, except the following differences. 
 1. The training was reproduced as above, but using automated feedback.
 
-2. The number of blocks per participant was decreased to 2, and the number of participants was increased as noted above, to make the task shorter and more appealing for Mechanical Turk workers. With the reduced number of trials, we could not use the fully factorial design that the authors did, instead choosing to fully cross "Task condition (clockwise object rotation, counterclockwise object rotation, no rotation), test-image type (correct or incorrect), [...] foil type (feature swap or orientation in the object-rotation condition; feature swap only in the no-rotation condition) and length of the rotation/memory interval (800, 1,600, or 2,400 ms)", but not to fully cross these factors with the feature swap foil. Instead, we randomly selected a feature swap foil on each trial.
+2. The number of blocks per participant was decreased to 2, block length was decreased to 24 trials per block, and the number of participants was increased as noted above, to make the task shorter and more appealing for Mechanical Turk workers. With the reduced number of trials, we could not use the fully factorial design that the authors did, instead choosing to fully cross "Task condition (clockwise object rotation, counterclockwise object rotation, no rotation), test-image type (correct or incorrect), [...] foil type (feature swap or orientation in the object-rotation condition; feature swap only in the no-rotation condition) and length of the rotation/memory interval (800, 1,600, or 2,400 ms)", but not to fully cross these factors with the feature swap foil. Instead, we randomly selected a feature swap foil on each trial. 
+
+3. We were unable to get the sounds used from the authors in time, so we used a sound of a bicycle wheel freewheeling for the rotation sound, and the sound of a buzzer for feedback.
 
 ###Analysis Plan
 
