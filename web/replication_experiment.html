@@ -51,6 +51,9 @@
 
 
 //Trials//////////////////////////////////////////////////////////////////////////////////
+
+	var response_mappings = shuffle_array(['correct','incorrect']);
+
 	var initial_page = {
 		type: 'turk-initial',
 		timing_post_trial: 0,
@@ -60,7 +63,7 @@
 
 	var initial_instructions = {
 			type: "instructions",
-			text: "Instructions: This experiment will consist of a training/practice phase, and then a set of testing trials. On each trial, you will be presented with a set of four consonants. Verbally rehearse these consonants during the remainder of the trial. Next, you will be presented with a cue (a pinwheel), which will either be rotating or still. If the pinwheel is rotating, you will also hear a sound of rotation. If the pinwheel is rotating, try to remember the speed at which it is rotating (the total amount it rotates is irrelevant). Next, you will be shown an object consisting of four colored bars in the shape of a +. Then, the object will be hidden (pretend that a curtain drops between you and the image), and there will be a delay period. If the pinwheel was rotating, you will hear the rotation sound, and try to mentally rotate the object for the time that it is hidden, at the same rate that the pinwheel rotated. At an unpredictable point, the curtain will be raised, and the object will be revealed. Your task is to determine whether the object shown is the same as the original one (none of the bars of the + have been switched), and if it has rotated the correct amount. If the pinwheel was not rotating, you do not have to perform the mental rotation, and you only have to check if the object is the same, it will not have been rotated. If you respond incorrectly, you will hear a buzzer. You will be tested at the end of some (randomly chosen) trials on your memory of the consonants you were shown at the beginning. If you do not recall the consonants correctly, you will hear a buzzer, and be forced to wait for a few seconds before continuing with the experiment. This can all sound a little intimidating, but once you go through the training, it will seem easier.<br /><br />Click continue when you are ready to begin the training phase of the experiment.",
+			text: "Instructions: This experiment will consist of a training/practice phase, and then a set of testing trials. On each trial, you will be presented with a set of four consonants. Verbally rehearse these consonants during the remainder of the trial. Next, you will be presented with a cue (a pinwheel), which will either be rotating or still. If the pinwheel is rotating, you will also hear a sound of rotation. If the pinwheel is rotating, try to remember the speed at which it is rotating (the total amount it rotates is irrelevant). Next, you will be shown an object consisting of four colored bars in the shape of a +. Then, the object will be hidden (pretend that a curtain drops between you and the image), and there will be a delay period. If the pinwheel was rotating, you will hear the rotation sound, and try to mentally rotate the object for the time that it is hidden, at the same rate that the pinwheel rotated. At an unpredictable point, the curtain will be raised, and the object will be revealed. Your task is to determine whether the object shown is the same as the original one (none of the bars of the + have been switched), and if it has rotated the correct amount. If the pinwheel was not rotating, you do not have to perform the mental rotation, and you only have to check if the object is the same, it will not have been rotated. You will respond by pressing 'e' if the object shown is " + response_mappings[0]  + " and 'i' if the object shown is " + response_mappings[1] +". If you respond incorrectly, you will hear a buzzer. You will be tested at the end of some (randomly chosen) trials on your memory of the consonants you were shown at the beginning. If you do not recall the consonants correctly, you will hear a buzzer, and be forced to wait for a few seconds before continuing with the experiment. This can all sound a little intimidating, but once you go through the training, it will seem easier.<br /><br />Click continue when you are ready to begin the training phase of the experiment.",
 			timing_post_trial: 500
 	};
 	
@@ -68,6 +71,7 @@
 
 	var training_1 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -87,6 +91,7 @@
 
 	var training_2 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -107,6 +112,7 @@
 
 	var training_3 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotate",
 			rotation_speed: -0.00087,
@@ -126,6 +132,7 @@
 
 	var training_4 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0.00087,
@@ -145,6 +152,7 @@
 
 	var training_5 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0,
@@ -164,8 +172,10 @@
 
 	var training_6 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: -0.00087,
 			object_specifier: [1,2,3,0],
 			initial_angle: 0.2,
@@ -191,6 +201,7 @@
 	
 	var practice_1 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0.00087,
@@ -203,6 +214,7 @@
 
 	var practice_2 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: -0.00087,
@@ -215,8 +227,10 @@
 
 	var practice_3 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: -0.00087,
 			object_specifier: [0,3,1,2],
 			initial_angle: 0.4,
@@ -227,6 +241,7 @@
 
 	var practice_4 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0,
@@ -239,6 +254,7 @@
 
 	var practice_5 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -251,8 +267,10 @@
 
 	var practice_6 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: 0.00087,
 			object_specifier: [1,2,3,0],
 			initial_angle: 0.62,
@@ -263,6 +281,7 @@
 
 	var practice_7 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -275,6 +294,7 @@
 
 	var practice_8 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -295,6 +315,7 @@
 	//CW, correct
 	var trial_1 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -303,6 +324,7 @@
 
 	var trial_2 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -311,6 +333,7 @@
 
 	var trial_3 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: 0.00087,
@@ -320,6 +343,7 @@
 	//CW, incorrect, swap
 	var trial_4 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0.00087,
@@ -328,6 +352,7 @@
 
 	var trial_5 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0.00087,
@@ -336,6 +361,7 @@
 
 	var trial_6 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0.00087,
@@ -345,24 +371,30 @@
 	//CW, incorrect, orientation
 	var trial_7 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: 0.00087,
 			rotation_time: 800
 	};
 
 	var trial_8 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: 0.00087,
 			rotation_time: 1600
 	};
 
 	var trial_9 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: 0.00087,
 			rotation_time: 2400
 	};
@@ -370,6 +402,7 @@
 	//CCW, correct
 	var trial_10 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: -0.00087,
@@ -378,6 +411,7 @@
 
 	var trial_11 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: -0.00087,
@@ -386,6 +420,7 @@
 
 	var trial_12 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "correct",
 			rotation_speed: -0.00087,
@@ -396,6 +431,7 @@
 	//CCW, incorrect, swap
 	var trial_13 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: -0.00087,
@@ -404,6 +440,7 @@
 
 	var trial_14 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: -0.00087,
@@ -412,6 +449,7 @@
 
 	var trial_15 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: -0.00087,
@@ -421,24 +459,30 @@
 	//CCW, incorrect, orientation
 	var trial_16 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: -0.00087,
 			rotation_time: 800
 	};
 
 	var trial_17 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: -0.00087,
 			rotation_time: 1600
 	};
 
 	var trial_18 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "rotation",
+			response_mappings: response_mappings,
 			rotation_speed: -0.00087,
 			rotation_time: 2400
 	};
@@ -446,6 +490,7 @@
 	//no rotation, correct
 	var trial_19 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -454,6 +499,7 @@
 
 	var trial_20 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -462,6 +508,7 @@
 
 	var trial_21 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -471,6 +518,7 @@
 	//no rotation, incorrect (swap)
 	var trial_22 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -479,6 +527,7 @@
 
 	var trial_23 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
@@ -487,6 +536,7 @@
 
 	var trial_24 = {
 			type: "rotation",
+			response_mappings: response_mappings,
 			timing_post_trial: 500,
 			experiment_trial_type: "swap",
 			rotation_speed: 0,
