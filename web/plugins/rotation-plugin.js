@@ -55,7 +55,7 @@
             for (var i = 0; i < trials.length; i++) {
 		var response_choices = (typeof params.response_choices === 'undefined') ? [69,73] : params.response_choices; //keypresses to accept, default is "e","i"
 		var response_mappings =  (typeof params.response_mappings === 'undefined') ? ["correct","incorrect"] : params.response_mappings; //mapping from keypresses to responses
-		var trial_type = (typeof params.trial_type === 'undefined') ? 'correct' : params.trial_type; // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
+		var experiment_trial_type = (typeof params.experiment_trial_type === 'undefined') ? 'correct' : params.experiment_trial_type; // Whether trial is "correct", if not, whether "swap" error, or "rotate" error
 		var object_specifier = (typeof params.object_specifier === 'undefined') ? random_object_specifier() : params.object_specifier;
                 trials[i] = {
                     "timing_post_trial": (typeof params.timing_post_trial === 'undefined') ? 0 : params.timing_post_trial,
@@ -65,12 +65,12 @@
                     "rotation_speed": (typeof params.rotation_speed === 'undefined') ? 0 : params.rotation_speed, //Rotation 0 for none, clockwise: positive, counter-clockwise: negative, radians/ms
                     "rotation_time": (typeof params.rotation_time === 'undefined') ? 800 : params.rotation_time, //Rotation time, 800, 1600, or 2400, ms
                     "object_specifier": object_specifier, 
-                    "final_object_specifier": (trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
+                    "final_object_specifier": (experiment_trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
                     "initial_angle": (typeof params.initial_angle === 'undefined') ? Math.random() * twopi : params.initial_angle, //Initial angle of object, in radians.
                     "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? ((Math.random() < 0.25) ? true : false ) : params.verb_supp_check, //Whether to test recall of consonants on this trial
-                    "trial_type": trial_type, 
+                    "experiment_trial_type": experiment_trial_type, 
                     "practice_trial": (typeof params.practice_trial === 'undefined') ? false : true, //Practice trial indicator
-                    "correct_response": (trial_type === 'correct') ? 'correct' : 'incorrect'
+                    "correct_response": (experiment_trial_type === 'correct') ? 'correct' : 'incorrect'
                 };
             }
             return trials;
@@ -273,7 +273,7 @@
 		rt_start_time = (new Date()).getTime();
 		
 		$('#prompt-div').text(trial.prompt);
-		if (trial.trial_type == "rotate") { //If rotation error
+		if (trial.experiment_trial_type == "rotate") { //If rotation error
 			var rotation_times = [800,1600,2400];
 			rotation_times.splice(rotation_times.indexOf(trial.rotation_time),1);	
 			var r = Math.floor(2*Math.random()); //Select a random rotation time from the other two options
@@ -387,7 +387,7 @@
 			"verb_supp_check": trial.verb_supp_check, 
 			"consonant_correct_count": consonant_correct_count, 
 			"verb_supp_consonants": these_consonants,
-			"trial_type": trial.trial_type, 
+			"experiment_trial_type": trial.experiment_trial_type, 
 			"practice_trial": trial.practice_trial, 
 			"correct_response": trial.correct_response 
 		});
