@@ -68,7 +68,7 @@
                     "final_object_specifier": (experiment_trial_type === 'swap') ? select_new_object_specifier(object_specifier.slice(0)) : object_specifier,
                     "initial_angle": (typeof params.initial_angle === 'undefined') ? Math.random() * twopi : params.initial_angle, //Initial angle of object, in radians.
                     "verb_supp_check": (typeof params.verb_supp_check === 'undefined') ? ((Math.random() < 0.25) ? true : false ) : params.verb_supp_check, //Whether to test recall of consonants on this trial
-                    "experiment_trial_type": experiment_trial_type, 
+                    "experiment_trial_type": trial.experiment_trial_type, 
                     "practice_trial": (typeof params.practice_trial === 'undefined') ? false : true, //Practice trial indicator
                     "correct_response": (experiment_trial_type === 'correct') ? 'correct' : 'incorrect'
                 };
