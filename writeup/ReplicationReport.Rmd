@@ -20,6 +20,9 @@ Methods
 
 ###Power Analysis
 
+Using G*Power, we ran an analysis based on the effect-size statistic found by the authors, $\eta^2 = 0.74$, and computed the post-hoc power for the original study to be 0.92. Thus, we originally intended to run the study with 12 subjects, as in the original paper. 
+
+However, as alluded to above, we have reduced the amount of data collected per subject from 5 blocks to 2. Thus we increased our sample size to 30 participants, in order to collect the same total amount of data.
 
 ###Planned Sample
 Our sample will be taken from Mechanical Turk, which has a broader population sample than standard college-student based studies, but generally produces equally reliable data (Buhrmester, Kwang, and Gosling, Perspectives on Psychological Science, 2011).
