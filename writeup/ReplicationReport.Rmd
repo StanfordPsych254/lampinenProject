@@ -55,3 +55,81 @@ We will analyze the data following the analysis used in the original paper. We w
 
 Analysis
 ---------------
+```{r}
+library(rjson)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
+
+```{r}
+data_location = "../data/pilot/"
+files = list.files(path = data_location,pattern="data_subject_.*.json")
+subject = vector()
+trial_type=vector()
+experiment_data=NULL
+practice_trial=vector()
+practice_trial=vector()
+for (i in 1:length(files)) {
+  path = paste(data_location,files[i],sep="")
+  print(i)
+  print(path)
+  c = file(path, "r")
+  l = readLines(c, -1L)
+  close(c)
+  these_data = lapply(X=l, fromJSON)
+  this_trial_data = list();
+  j = 1;
+  for (trial_i in 1:length(these_data[[1]])) {
+    if(grepl("rotation",gsub(" ","",these_data[[1]][[trial_i]]$trial_type))) {
+      this_trial_data[[j]] = these_data[[1]][[trial_i]]
+      for (data_i in 1:length(this_trial_data[[j]])) {
+        if (length(this_trial_data[[j]][[data_i]]) > 1) {
+          this_trial_data[[j]][[data_i]] = paste(this_trial_data[[j]][[data_i]],collapse='')
+        }
+      }
+      j = j+1
+    }
+  }
+  this_trial_data = do.call(rbind, lapply(this_trial_data, data.frame));
+  this_trial_data$subject = i
+  if (is.null(experiment_data)) {
+    
+    experiment_data = rbind(this_trial_data)
+  }
+  else {
+    experiment_data = rbind(experiment_data,this_trial_data)
+  }
+}
+```
+
+
+```{r}
+experiment_data = experiment_data %>% mutate(correct_response_key = ifelse(substr(as.character(experiment_data$response_mappings[1]),1,7) == 'correct',as.numeric(substr(as.character(response_choices),1,2)),as.numeric(substr(as.character(response_choices),3,4))),rotating = (rotation_speed != 0),experiment_trial_type=gsub(" ","",experiment_trial_type)) %>% mutate(answer_was_correct=ifelse(correct_response=="correct",response==correct_response_key,response != correct_response_key))
+
+filtering_data = experiment_data %>% filter(verb_supp_check) %>% group_by(subject) %>% summarise(score=sum(consonant_correct_count==4)/n()) %>% mutate(accept = score > 0.75) 
+
+filtered_data = experiment_data %>% filter(filtering_data[filtering_data$subject,]$accept & !practice_trial)
+
+
+# coefficients for calculating capacity K
+a = -1
+b = 2*4+1 
+
+#K is calculate by the crazy 2AFC formula from Alvarez & Thompson, 2009, cited in the original paper, using N = 4
+subject_aggregated_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating) %>% summarise(percent_correct = sum(answer_was_correct)/n()) %>% spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
+
+sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
+final_data = subject_aggregated_data %>% group_by(rotating) %>% summarize(K.mean = mean(K),K.sem = sem(K))
+```
+
+```{r}
+ggplot(final_data,aes(x=rotating,y=K.mean,fill=rotating)) +
+  geom_bar(stat='identity') +
+  geom_errorbar(ymax=final_data$K.mean+final_data$K.sem,ymin=final_data$K.mean-final_data$K.sem,width=0.25)+
+  ylim(0,4) +
+  labs(x='Rotation',y='K') +
+  theme_bw()
+```
+
