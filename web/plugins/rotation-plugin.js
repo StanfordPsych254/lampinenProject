@@ -33,11 +33,18 @@
 	}
 
 
+
 	function select_new_object_specifier(old_obj_spec) {
-		var new_obj_spec = random_object_specifier(); 
-		while (cyclically_permuted(new_obj_spec, old_obj_spec)) {
-			new_obj_spec = random_object_specifier();
+		var new_obj_spec = old_obj_spec.slice(); 
+		var position_1 = Math.floor((Math.random() * 4));
+		var position_2 = Math.floor((Math.random() * 4));
+		
+		while (position_1 == position_2) {
+			position_2 = Math.floor((Math.random() * 4));
 		}
+		var temp = new_obj_spec[position_1];
+		new_obj_spec[position_1] = new_obj_spec[position_2];
+		new_obj_spec[position_2] = temp;
 		return new_obj_spec
 	}
 
