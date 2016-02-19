@@ -561,10 +561,49 @@
 	var bg_2 = {
 			type: "question",
 			timing_post_trial: 0,
-			prompt: "Do you have any comments on this HIT?",
+			prompt: "What is your gender?",
+			force_response: false,
+			correct_response: "",
+			response_type: "multi",
+			response_choices: ["female","male","other"]
+	};
+
+
+	var bg_3 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "How old are you?",
+			correct_response: "",
+			response_type: "free"
+	};
+
+	var bg_4 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "What is your ethnicity?",
 			force_response: false,
 			correct_response: "",
 			response_type: "free"
+	};
+
+	var bg_5 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "What is your level of education?",
+			correct_response: "",
+			response_type: "multi",
+			response_choices: ["Did not graduate high school","High school diploma","Some college, no degree","Associates Degree","Bachelors Degree","Some graduate school, no degree","Masters Degree","Doctorate, M.D., etc."]
+	};
+ 
+
+
+	var bg_6 = {
+			type: "question",
+			timing_post_trial: 0,
+			prompt: "Do you have any comments on this HIT?",
+			force_response: false,
+			correct_response: "",
+			response_type: "multi"
 	};
 
 
@@ -605,7 +644,7 @@
 
 	var bg_block = {
 		chunk_type: 'linear',
-		timeline: [bg_intro,bg_1,bg_2]
+		timeline: [bg_intro,bg_1,bg_2,bg_3,bg_4,bg_5,bg_6]
 	};
 
 
