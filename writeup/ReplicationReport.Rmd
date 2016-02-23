@@ -9,6 +9,7 @@ Replication of Capacity for Visual Features in Mental Rotation (Experiment 1a) b
 ================================
 
 Andrew Lampinen
+
 lampinen@stanford.edu
 
 Introduction
@@ -63,6 +64,7 @@ library(rjson)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(lme4)
 ```
 
 
@@ -123,6 +125,7 @@ b = 2*4+1
 #K is calculate by the crazy 2AFC formula from Alvarez & Thompson, 2009, cited in the original paper, using N = 4
 subject_aggregated_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating) %>% summarise(percent_correct = sum(answer_was_correct)/n()) %>% spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
 
+
 sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
 final_data = subject_aggregated_data %>% group_by(rotating) %>% summarize(K.mean = mean(K),K.sem = sem(K))
 ```
@@ -135,4 +138,27 @@ ggplot(final_data,aes(x=rotating,y=K.mean,fill=rotating)) +
   labs(x='Rotation',y='K') +
   theme_bw()
 ```
+
+```{r}
+# subject_aggregated_data_2 = subject_aggregated_data %>% select(subject,rotating,K) %>% spread(rotating,K) %>% mutate(delta_K=`FALSE`-`TRUE`)
+
+# mod_null = lm(data=subject_aggregated_data,K ~ 1)
+# summary(mod_null)
+# mod_1 = lm(data=subject_aggregated_data,K ~ rotating)
+# summary(mod_1)
+# anova(mod_null,mod_1)
+# 
+# mod_2 = lm(data=subject_aggregated_data_2,delta_K ~ 1)
+# summary(mod_2)
+n_subjects = length(unique(subject_aggregated_data$subject))
+# mod_lmer = lmer(data=subject_aggregated_data,K ~ rotating+ (1|subject))
+# summary(mod_lmer) 
+
+t_res = t.test(subject_aggregated_data[subject_aggregated_data$rotating,]$K,subject_aggregated_data[!subject_aggregated_data$rotating,]$K,paired=T)
+F_stat = (t_res$statistic)^2
+p = pf(F_stat,1,n_subjects-1,lower.tail=F)
+
+
+```
+$$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 
