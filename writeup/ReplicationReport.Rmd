@@ -42,13 +42,14 @@ Methods
 
 Using G*Power, we ran an analysis based on the effect-size statistic found by the authors, $\eta^2 = 0.74$, and computed the post-hoc power for the original study to be 0.92. Thus, we originally intended to run the study with 12 subjects, as in the original paper. 
 
-However, as alluded to above, we have reduced the amount of data collected per subject from 5 blocks to 2. Thus we increased our sample size to 30 participants, in order to collect the same total amount of data.
+However, we have reduced the amount of data collected per subject from 5 blocks to 2, as noted in the Procedure section. Thus we increased our sample size to 30 participants, in order to collect the same total amount of data.
 
 ###Planned Sample
 Our sample will be taken from Mechanical Turk, which has a broader population sample than standard college-student based studies, but generally produces equally reliable data (Buhrmester, Kwang, and Gosling, Perspectives on Psychological Science, 2011).
 
 ###Materials
 In the original experiment: 
+
 > “The experiment was conrolled by a PC running SR Research Experiment Builder (SR Research Ltd., Mississauga, Ontario, Canada). The display subtended 32.6° × 24.4° at an approximate view- ing distance of 56 cm and was presented on a 17-in. Dell E770S CRT monitor with a 75-Hz refresh rate and resolu- tion of 1,024 × 768 pixels (33.6 pixels per degree). On each trial, participants were shown an abstracted four- bond molecule: a cross with four distinctly colored parts, each 10.7° long and 2.4° wide (see Fig. 2a). The four colors were randomly assigned to the four parts without replacement. The set of colors consisted of orange (RGB values: 233,122,0), green (RGB values: 0,166,0), aqua (RGB values: 0,136,233), and magenta (RGB values: 230,0,230), and the object was presented against a dark gray (RGB values: 80,80,80) background. In the initial display, any two adjacent parts formed a 90° angle, and the whole object was tilted either 10° clockwise (50% of trials) or 10° counterclockwise (50% of trials) from the cardinal orientation.” 
 
 Unfortunately, on Mechanical Turk, we did not have direct control over the size of the participants display, their position relative to that display, etc. The experiment ran within a frame on the Mechanical Turk website, we were unable to control the display outside of this frame. However, we endeavored to reproduce the stimuli as faithfully as possible, by running an experiment in a frame with the same aspect ratio (800 x 600), and with the stimuli produced with bars 263 pixels long and 60 pixels wide, in the same proportion to the display area that they were in the original experiment. Finally, although it was not stated explicitly in the original paper, in the figures illustrating the experiment it appears the display of the cross included a dark circle that covered the center of the cross figure. We used a black circle of radius $\sqrt{2}/2$ times the width of the rectangles for this (i.e. a circle just big enough to completely cover the center).
@@ -56,9 +57,11 @@ Unfortunately, on Mechanical Turk, we did not have direct control over the size 
 ###Procedure
 
 The original paper's procedures were: 
+
 > “In the object-rotation condition, trials were self-initiated and began with a cue animation showing a gray-scale pinwheel rotating for 2,400 ms; this rotation was accompanied by a continuous auditory clip of a mechanical sound mimicking a wheel rotating (Fig. 2a). The wheel rotated either clockwise or counterclockwise. Participants were instructed to think of the auditory clip as the sound that the wheel made while rotating and to remember the direction and rate of the wheel’s rotation (a constant rate). They were informed that the cumulative amount of the wheel’s angular rotation was irrelevant to the task. The to-be-rotated image was then presented statically for 500 ms, followed by a blank screen, which was presented for 800, 1,600, or 2,400 ms. Participants were instructed to pretend that a curtain dropped between them and the image, so that while the screen was blank, they would hear the mechanical sound but not see the rotating image. As soon as they heard the sound, they were to imagine the image rotating in the same direction and at the same rate as the wheel at the beginning of the trial, for as long as the mechanical sound played. They were told that at an unpredictable point, the “curtain would be raised” (though all display transitions were immediate), and another image would be revealed. Their task then was to indicate whether the image represented the same object with no feature swaps (i.e., with all colors attached to the correct postrotation parts) at the correctly rotated orientation. In the control, no-rotation condition (see Fig. 2a), the cue was a static wheel with no sound. The four-part object was then presented for 500-ms, and participants were told to remember which colors were attached to which parts; no rotation was required. The delay intervals before the test image was presented were equivalent to those in the object-rotation condition. In both conditions, the test image represented the initial object correctly on 50% of the trials, and was incorrect on the other 50% of the trials. Participants were given auditory feedback on their accuracy. To isolate processing capacity for visual representations without the aid of verbal encoding, we included a verbal suppression task in both conditions. Prior to the cue in each trial, participants were presented with four nonrepeating consonants, and they were told to rehearse the letters mentally throughout the trial. Participants’ memory for the letters was tested, unpredictably, at the end of 25% of the trials. Incorrect answers led to auditory feedback and a 3-s delay penalty, during which participants could not advance to the next trial. Participants were told that they should monitor each test object for both inaccurate orientation and color swaps within the object. The experimenter guided each participant through several sample trials (equal numbers of all trial types within the design), providing verbal feedback on the participant’s verbal responses. If the test image was an incorrect foil, the experimenter revealed whether it was an orientation foil or a feature-swap foil. After this interactive tutorial, the participant completed another set of self-paced practice trials before starting the actual experiment. In the object-rotation condition, an incorrect foil was equally likely to be a feature-swap foil (i.e., correct orientation but two colored parts swapped) or an orientation foil (i.e., wrong orientation and no color swap). In the no-rotation condition, incorrect foils were always featureswap foils. Task condition (clockwise object rotation, counterclockwise object rotation, or no rotation), testimage type (correct or incorrect), feature-swap foil (six possible foils), foil type (feature swap or orientation in the object-rotation condition; feature swap only in the norotation condition), and length of the rotation/memory interval (800, 1,600, or 2,400 ms) were fully crossed across 180 randomly ordered trials. Each participant was tested in five blocks of 36 trials. The entire experiment lasted approximately 60 min.” 
 
-These procedures were followed directly, except the following differences. 
+These procedures were followed directly, except for the following differences: 
+
 1. The training was reproduced as above, but using automated feedback.
 
 2. The number of blocks per participant was decreased to 2, block length was decreased to 24 trials per block, and the number of participants was increased as noted above, to make the task shorter and more appealing for Mechanical Turk workers. With the reduced number of trials, we could not use the fully factorial design that the authors did, instead choosing to fully cross "Task condition (clockwise object rotation, counterclockwise object rotation, no rotation), test-image type (correct or incorrect), [...] foil type (feature swap or orientation in the object-rotation condition; feature swap only in the no-rotation condition) and length of the rotation/memory interval (800, 1,600, or 2,400 ms)", but not to fully cross these factors with the feature swap foil. Instead, we randomly selected a feature swap foil on each trial. 
@@ -88,44 +91,51 @@ trial_type=vector()
 experiment_data=NULL
 practice_trial=vector()
 practice_trial=vector()
-for (i in 1:length(files)) {
-  path = paste(data_location,files[i],sep="")
+for (i in 1:length(files)) { 
+  path = paste(data_location,files[i],sep="") #Path to file
   print(i)
   print(path)
   c = file(path, "r")
   l = readLines(c, -1L)
   close(c)
-  these_data = lapply(X=l, fromJSON)
+  these_data = lapply(X=l, fromJSON) #Convert list of json objects to list of R objects
+  
   this_trial_data = list();
   j = 1;
+  #For each trial in this experiment, extract data from it
   for (trial_i in 1:length(these_data[[1]])) {
-    if(grepl("rotation",gsub(" ","",these_data[[1]][[trial_i]]$trial_type))) {
+    if(grepl("rotation",gsub(" ","",these_data[[1]][[trial_i]]$trial_type))) { #Only get data from rotation trials for this analysis, don't care about instructions, etc.
       this_trial_data[[j]] = these_data[[1]][[trial_i]]
       for (data_i in 1:length(this_trial_data[[j]])) {
-        if (length(this_trial_data[[j]][[data_i]]) > 1) {
+        if (length(this_trial_data[[j]][[data_i]]) > 1) { #Handle lists contained within a single trial's data
           this_trial_data[[j]][[data_i]] = paste(this_trial_data[[j]][[data_i]],collapse='')
         }
       }
       j = j+1
     }
   }
-  this_trial_data = do.call(rbind, lapply(this_trial_data, data.frame));
-  this_trial_data$subject = i
+  this_trial_data = do.call(bind_rows, lapply(this_trial_data, data.frame)); #convert to data frame
+  this_trial_data$subject = i #Anonymous subject ids
   if (is.null(experiment_data)) {
-    
-    experiment_data = rbind(this_trial_data)
+    experiment_data = bind_rows(this_trial_data)
   }
   else {
-    experiment_data = rbind(experiment_data,this_trial_data)
+    experiment_data = bind_rows(experiment_data,this_trial_data)
   }
 }
 ```
 
 
 ```{r}
-experiment_data = experiment_data %>% mutate(correct_response_key = ifelse(substr(as.character(experiment_data$response_mappings[1]),1,7) == 'correct',as.numeric(substr(as.character(response_choices),1,2)),as.numeric(substr(as.character(response_choices),3,4))),rotating = (rotation_speed != 0),experiment_trial_type=gsub(" ","",experiment_trial_type)) %>% mutate(answer_was_correct=ifelse(correct_response=="correct",response==correct_response_key,response != correct_response_key))
+experiment_data = experiment_data %>% 
+  mutate(correct_response_key = ifelse(substr(as.character(experiment_data$response_mappings[1]),1,7) == 'correct',as.numeric(substr(as.character(response_choices),1,2)),as.numeric(substr(as.character(response_choices),3,4))),rotating = (rotation_speed != 0),experiment_trial_type=gsub(" ","",experiment_trial_type)) %>%
+  mutate(answer_was_correct=ifelse(correct_response=="correct",response==correct_response_key,response != correct_response_key))
 
-filtering_data = experiment_data %>% filter(verb_supp_check) %>% group_by(subject) %>% summarise(score=sum(consonant_correct_count==4)/n()) %>% mutate(accept = score > 0.75) 
+#Find which subjects passed more than 75% of the consonant checks, exclude those who didn't
+filtering_data = experiment_data %>% 
+  filter(verb_supp_check) %>% 
+  group_by(subject) %>% summarise(score=sum(consonant_correct_count==4)/n()) %>% 
+  mutate(accept = score > 0.75) 
 
 filtered_data = experiment_data %>% filter(filtering_data[filtering_data$subject,]$accept & !practice_trial)
 
@@ -134,12 +144,16 @@ filtered_data = experiment_data %>% filter(filtering_data[filtering_data$subject
 a = -1
 b = 2*4+1 
 
-#K is calculate by the crazy 2AFC formula from Alvarez & Thompson, 2009, cited in the original paper, using N = 4
-subject_aggregated_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating) %>% summarise(percent_correct = sum(answer_was_correct)/n()) %>% spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
+#K is calculate by the crazy 2AFC formula from Alvarez & Thompson, 2009, cited in the original paper, using N = 4 because the objects have 4 bars
+subject_aggregated_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating) %>%
+  summarise(percent_correct = sum(answer_was_correct)/n()) %>% 
+  spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
 
 
 sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
-final_data = subject_aggregated_data %>% group_by(rotating) %>% summarize(K.mean = mean(K),K.sem = sem(K))
+final_data = subject_aggregated_data %>% 
+  group_by(rotating) %>% 
+  summarize(K.mean = mean(K),K.sem = sem(K))
 ```
 
 ```{r}
