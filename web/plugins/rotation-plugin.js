@@ -304,7 +304,8 @@
 			//console.log(consonant_correct_count)
 			if (consonant_correct_count == 4) {
 				verb_supp_checking = false;
-				end_function();
+				var verb_supp_correct_delay_time = 500;//ms
+				window.setTimeout(function(){end_function()} ,verb_supp_correct_delay_time);
 			}
 		}
 		else {
