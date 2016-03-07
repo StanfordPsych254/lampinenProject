@@ -57,7 +57,7 @@
 	var initial_page = {
 		type: 'turk-initial',
 		timing_post_trial: 0,
-		intro_text: 'Hello, and thank you for participating in this experiment! <br /><br />By answering the following questions, you are participating in a study being performed by the Stanford Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:stanfordpysch254@gmail.com">stanfordpysch254@gmail.com</a>. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. Note however that we have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241" target="_blank">here</a>.'
+		intro_text: 'Hello, and thank you for participating in this experiment! <br /><br />By answering the following questions, you are participating in a study being performed by the Stanford Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:stanfordpysch254@gmail.com">stanfordpysch254@gmail.com</a>. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. We have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241" target="_blank">here</a>.'
 	};
 
 
@@ -603,7 +603,7 @@
 			prompt: "Do you have any comments on this HIT?",
 			force_response: false,
 			correct_response: "",
-			response_type: "multi"
+			response_type: "free"
 	};
 
 
@@ -616,6 +616,7 @@
 
 	var final_page = {
 		type: 'turk-final',
+		text: 'Thank you for participating in the experiment, we appreciate your assistance with our research. We are attempting to measure whether mental rotation of an object interferes with memory for that object's features. Please do not share this information with any other potential participants, to avoid altering their responses.<br /><br />Please click the button below to submit the results to mechanical turk and return. Note that this may take some time. Thank you again for participating.', 
 		timing_post_trial: 0
 	};
 
