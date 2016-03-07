@@ -70,7 +70,7 @@ These procedures were followed directly, except for the following differences:
 
 ###Analysis Plan
 
-We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We will discard participants who have less than 75% accuracy in the verbal suppression task, and replace them to maintain the sample size. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. 
+We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We will discard participants who have less than 75% accuracy in the verbal suppression task. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. 
 
 ###Differences from Original Study
 
