@@ -28,7 +28,7 @@ library(tidyr)
 library(lme4)
 
 opts_chunk$set(fig.width=8, fig.height=5, 
-                      echo=TRUE, warning=FALSE, message=FALSE, cache=TRUE)
+                      echo=TRUE, warning=FALSE, message=FALSE, cache=FALSE)
 ```
 
 Introduction
@@ -84,7 +84,7 @@ Analysis
 
 
 ```{r}
-data_location = "../data/pilot/"
+data_location = "../data/pilotB/"
 files = list.files(path = data_location,pattern="data_subject_.*.json")
 subject = vector()
 trial_type=vector()
@@ -135,7 +135,7 @@ experiment_data = experiment_data %>%
 filtering_data = experiment_data %>% 
   filter(verb_supp_check) %>% 
   group_by(subject) %>% summarise(score=sum(consonant_correct_count==4)/n()) %>% 
-  mutate(accept = score >= 0.75) 
+  mutate(accept = score >= 0.4) 
 
 subjects_to_keep = filtering_data[filtering_data$accept,]$subject
 filtered_data = experiment_data %>% filter((subject %in% subjects_to_keep) & !practice_trial)
@@ -148,12 +148,12 @@ b = 2*4+1
 #K is calculate by the crazy 2AFC formula from Alvarez & Thompson, 2009, cited in the original paper, using N = 4 because the objects have 4 bars
 subject_aggregated_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating) %>%
   summarise(percent_correct = sum(answer_was_correct)/n()) %>% 
-  spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
+  spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,ifelse(K2 <= 4 & K2 >= 0,K2,NA)))
 
 
 subject_aggregated_time_split_data = filtered_data %>% group_by(subject,experiment_trial_type,rotating,rotation_time) %>%
   summarise(percent_correct = sum(answer_was_correct)/n()) %>% 
-  spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,K2))
+  spread(experiment_trial_type,percent_correct) %>% mutate(K1 = (-b+sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a),K2 = (-b-sqrt(b^2-4*a*(-2*6*(swap-(1-correct)))))/(2*a)) %>% mutate(K = ifelse(K1 <= 4 & K1 >= 0,K1,ifelse(K2 <= 4 & K2 >= 0,K2,NA)))
 
 
 sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
@@ -161,7 +161,7 @@ sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
 #Data for main analysis
 final_data = subject_aggregated_data %>% 
   group_by(rotating) %>% 
-  summarize(K.mean = mean(K),K.sem = sem(K))
+  summarize(K.mean = mean(K,na.rm=T),K.sem = sem(K))
 
 #data for analysis based on accuracy
 final_accuracy_data = subject_aggregated_data %>% 
@@ -171,10 +171,10 @@ final_accuracy_data = subject_aggregated_data %>%
 #data for main analysis split by rotation_time
 final_time_split_data = subject_aggregated_time_split_data %>% 
   group_by(rotating,rotation_time) %>% 
-  summarize(K.mean = mean(K),K.sem = sem(K))
+  summarize(K.mean = mean(K,na.rm=T),K.sem = sem(K))
 ```
 
-#Main Analysis
+###Main Analysis
 ```{r}
 ggplot(final_data,aes(x=rotating,y=K.mean,fill=rotating)) +
   geom_bar(stat='identity') +
@@ -196,7 +196,7 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 ```
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 
-#Accuracy-based secondary Analysis
+###Accuracy-based secondary Analysis
 ```{r}
 ggplot(final_accuracy_data,aes(x=rotating,y=accuracy.mean,fill=rotating)) +
   geom_bar(stat='identity') +
@@ -218,7 +218,7 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 ```
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 
-#Split by rotation_time
+###Split by rotation_time
 ```{r}
 final_time_split_data$rotation_time = factor(final_time_split_data$rotation_time)
 
