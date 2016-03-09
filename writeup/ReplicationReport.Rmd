@@ -80,6 +80,10 @@ We will analyze the data following the analysis used in the original paper. We w
 
 3. The original study did not state how out of range capacity estimates, we chose to allow these to avoid breaking the statistical assumptions of the hypothesis tests.
 
+###Our study
+Our study can be done online at: 
+https://web.stanford.edu/~lampinen/mturk/254/replication/web/replication_experiment.html
+
 
 Analysis
 ---------------
@@ -180,7 +184,25 @@ final_time_split_data = subject_aggregated_time_split_data %>%
   summarize(K.mean = mean(K,na.rm=T),K.sem = sem(K))
 ```
 
-###Main Analysis
+##Main Analysis
+###Original results
+The original paper's results are reproduced below:
+
+```{r}
+original_paper_data = data.frame(rotating=c(TRUE,FALSE),K.mean=c(0.96,1.86),K.sem=c(0.1,0.15))
+ggplot(original_paper_data,aes(x=rotating,y=K.mean,fill=rotating)) +
+  geom_bar(stat='identity') +
+  geom_errorbar(ymax=original_paper_data$K.mean+original_paper_data$K.sem,ymin=original_paper_data$K.mean-original_paper_data$K.sem,width=0.25)+
+  ylim(0,4) +
+  labs(x='rotation',y='K') +
+  theme_bw()
+```
+
+*Original test statistic:*
+$$F (1, 11) = 32.04, p < .001$$
+
+###Our results
+The plot of our result is below:
 ```{r}
 ggplot(final_data,aes(x=rotating,y=K.mean,fill=rotating)) +
   geom_bar(stat='identity') +
@@ -200,9 +222,11 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 
 
 ```
+*Our test statistic:*
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 
-###Accuracy-based secondary Analysis
+##Secondary analyses
+###Accuracy-based analysis
 ```{r}
 ggplot(final_accuracy_data,aes(x=rotating,y=accuracy.mean,fill=rotating)) +
   geom_bar(stat='identity') +
@@ -224,7 +248,7 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 ```
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 
-###Split by rotation_time
+###Capacity analysis split by rotation_time
 ```{r}
 final_time_split_data$rotation_time = factor(final_time_split_data$rotation_time)
 
