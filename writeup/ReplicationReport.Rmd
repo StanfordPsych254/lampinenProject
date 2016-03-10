@@ -267,3 +267,43 @@ ggplot(final_time_split_data,aes(x=rotating,y=K.mean,ymax=final_time_split_data$
 ```
 
 This plot is the same as the plot of the main result, except split by the time the object was hidden, to show any potential effects of how long the object must be mentally rotated or held in memory.
+
+
+Exploratory analyses
+-------------------------
+
+###Distribution of capacity estimates
+```{r}
+ggplot(data=subject_aggregated_data,aes(x=K,fill=rotating)) +
+  geom_histogram(position='dodge') +
+  theme_bw()
+```
+
+
+###Results with capacities clipped at zero
+```{r}
+subject_aggregated_data = subject_aggregated_data %>% mutate(clipped_K = ifelse(K >= 0,K,0))
+final_clipped_data = subject_aggregated_data %>% 
+  group_by(rotating) %>% 
+  summarize(K.mean = mean(clipped_K,na.rm=T),K.sem = sem(clipped_K))
+```
+
+```{r}
+ggplot(final_clipped_data,aes(x=rotating,y=K.mean,fill=rotating)) +
+  geom_bar(stat='identity') +
+  geom_errorbar(ymax=final_clipped_data$K.mean+final_clipped_data$K.sem,ymin=final_clipped_data$K.mean-final_clipped_data$K.sem,width=0.25)+
+  ylim(-1,4) +
+  labs(x='rotation',y='K (clipped at zero)') +
+  theme_bw()
+```
+
+###Accuracy by condition:
+```{r}
+overall_accuracies = subject_aggregated_data %>% group_by(rotating) %>% summarize(correct = mean(correct),rotate=mean(rotate),swap=mean(swap)) %>% gather(condition,accuracy,correct,rotate,swap)
+
+ggplot(overall_accuracies,aes(x=condition,y=accuracy,fill=rotating)) +
+  geom_bar(stat='identity',position='dodge') +
+  ylim(0,1) +
+  theme_bw()
+```
+
