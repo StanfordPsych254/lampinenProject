@@ -90,7 +90,7 @@ Analysis
 
 
 ```{r}
-data_location = "../data/pilotB_anonymized/"
+data_location = "../data/data_anonymized/"
 files = list.files(path = data_location,pattern="data_subject_.*.json")
 subject = vector()
 trial_type=vector()
@@ -207,7 +207,7 @@ The plot of our result is below:
 ggplot(final_data,aes(x=rotating,y=K.mean,fill=rotating)) +
   geom_bar(stat='identity') +
   geom_errorbar(ymax=final_data$K.mean+final_data$K.sem,ymin=final_data$K.mean-final_data$K.sem,width=0.25)+
-  ylim(0,4) +
+  ylim(-1,4) +
   labs(x='rotation',y='K') +
   theme_bw()
 ```
@@ -235,7 +235,7 @@ $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
 ggplot(final_accuracy_data,aes(x=rotating,y=accuracy.mean,fill=rotating)) +
   geom_bar(stat='identity') +
   geom_errorbar(ymax=final_accuracy_data$accuracy.mean+final_accuracy_data$accuracy.sem,ymin=final_accuracy_data$accuracy.mean-final_accuracy_data$accuracy.sem,width=0.25)+
-  ylim(0,4) +
+  ylim(0,1) +
   labs(x='rotation',y='Accuracy') +
   theme_bw()
 ```
@@ -261,7 +261,7 @@ final_time_split_data$rotation_time = factor(final_time_split_data$rotation_time
 ggplot(final_time_split_data,aes(x=rotating,y=K.mean,ymax=final_time_split_data$K.mean+final_time_split_data$K.sem,ymin=final_time_split_data$K.mean-final_time_split_data$K.sem,fill=rotation_time)) +
   geom_bar(stat='identity',position='dodge') +
   geom_errorbar(aes(width=0.25),position=position_dodge(width=0.9))+
-  ylim(0,4) +
+  ylim(-1,4) +
   labs(x='rotation',y='K') +
   theme_bw()
 ```
