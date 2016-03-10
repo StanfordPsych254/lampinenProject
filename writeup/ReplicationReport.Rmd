@@ -222,8 +222,12 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 
 
 ```
-*Our test statistic:*
+
+*Our test statistic for a difference between the groups:*
+
+The value $K$ is the capacity, the estimated number of features (0-4) the subjects could retain in each condition. This test compares the mean capacity between the two conditions.
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
+(This was computed by running a paired t value on the data across the rotating and non-rotating conditions, using $F = t^2$ relation to get an $F$-statistic, and then performing the significance tests on that $F$-statistic.)
 
 ##Secondary analyses
 ###Accuracy-based analysis
@@ -246,7 +250,9 @@ p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 
 
 ```
+This statistic is another check of the main result that was included in the original paper, based on the accuracy (hit rate) between the conditions, rather than computed capacity:
 $$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
+(Computed identically to the above, except using accuracy instead of capacity.)
 
 ###Capacity analysis split by rotation_time
 ```{r}
@@ -260,3 +266,4 @@ ggplot(final_time_split_data,aes(x=rotating,y=K.mean,ymax=final_time_split_data$
   theme_bw()
 ```
 
+This plot is the same as the plot of the main result, except split by the time the object was hidden, to show any potential effects of how long the object must be mentally rotated or held in memory.
