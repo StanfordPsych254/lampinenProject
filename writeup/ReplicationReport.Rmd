@@ -42,7 +42,7 @@ Methods
 
 Using G*Power, we ran an analysis based on the effect-size statistic found by the authors, $\eta^2 = 0.74$, and computed the post-hoc power for the original study to be 0.92. Thus, we originally intended to run the study with 12 subjects, as in the original paper. 
 
-However, we have reduced the amount of data collected per subject from 5 blocks to 2, as noted in the Procedure section. Thus we increased our sample size to 30 participants, in order to collect the same total amount of data.
+However, we have reduced the amount of data collected per subject from 5 blocks to 2, as noted in the Procedure section. Thus we increased our sample size to 30 participants, in order to collect the same total amount of data. We further chose to collect an additional 5% more (2 more subjects), in anticipation of dropouts and exclusions reducing our sample size.
 
 ###Planned Sample
 Our sample will be taken from Mechanical Turk, which has a broader population sample than standard college-student based studies, but generally produces equally reliable data (Buhrmester, Kwang, and Gosling, Perspectives on Psychological Science, 2011).
@@ -70,7 +70,7 @@ These procedures were followed directly, except for the following differences:
 
 ###Analysis Plan
 
-We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We encountered a situation in our pilot where the estimate of *K* was less than zero in the rotation condition, (this will occur whenever the false positive rate is higher than the hit rate) we chose to allow these estimates to avoid breaking t-distribution assumptions of the means. (It is not clear whether this situation arose in the original study, or what their resolution was.) We will discard participants who have less than 75% accuracy in the verbal suppression task. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. 
+We will analyze the data following the analysis used in the original paper. We will compute the mental capacity *K* with the formula for 2-alterative forced choice given by Alvarez & Thompson (2009). We encountered a situation in our pilot where the estimate of *K* was less than zero in the rotation condition, (this will occur whenever the false positive rate is higher than the hit rate) we chose to allow these estimates to avoid breaking the assumption of t-distribution of the means. (It is not clear whether this situation arose in the original study, or what their resolution was.) We will discard participants who have less than 75% accuracy in the verbal suppression task. We will compare the groups using a one-way ANOVA on the capacity estimates for each individual, aggregated across all their trials of each type, as that appears to be the technique used in the paper. 
 
 ###Differences from Original Study
 
@@ -78,7 +78,7 @@ We will analyze the data following the analysis used in the original paper. We w
 
 2. We reduced the length of the study (and compensated by recruiting more participants), to make the study more appealing to Mechanical Turk workers. This necessitated reducing the original design by randomizing the choice of swap on the foil swap trials, instead of fully crossing it. We do not expect this to affect the results, since there are still a large number of trials in each experiment, and there are only six possible swaps.
 
-3. The original study did not state how out of range capacity estimates, we chose to allow these to avoid breaking the statistical assumptions of the hypothesis tests.
+3. The original study did not state how they handled out of range capacity estimates, we chose to allow these estimates to avoid breaking the statistical assumptions of the hypothesis tests. See the analysis plan section above for details.
 
 ###Our study
 Our study can be done online at: 
@@ -90,7 +90,7 @@ Analysis
 
 
 ```{r}
-data_location = "../data/pilotB/"
+data_location = "../data/pilotB_anonymized/"
 files = list.files(path = data_location,pattern="data_subject_.*.json")
 subject = vector()
 trial_type=vector()
