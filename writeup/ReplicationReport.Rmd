@@ -28,7 +28,7 @@ library(tidyr)
 library(lme4)
 
 opts_chunk$set(fig.width=8, fig.height=5, 
-                      echo=TRUE, warning=FALSE, message=FALSE, cache=FALSE)
+                      echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE)
 ```
 
 Introduction
@@ -99,8 +99,8 @@ practice_trial=vector()
 practice_trial=vector()
 for (i in 1:length(files)) { 
   path = paste(data_location,files[i],sep="") #Path to file
-  print(i)
-  print(path)
+#  print(i)
+#  print(path)
   c = file(path, "r")
   l = readLines(c, -1L)
   close(c)
@@ -119,6 +119,9 @@ for (i in 1:length(files)) {
       }
       j = j+1
     }
+#     else if (grepl("question",gsub(" ","",these_data[[1]][[trial_i]]$trial_type))) {
+#       print(c(these_data[[1]][[trial_i]]$question,these_data[[1]][[trial_i]]$response))
+#     }
   }
   this_trial_data = do.call(bind_rows, lapply(this_trial_data, data.frame)); #convert to data frame
   this_trial_data$subject = i #Anonymous subject ids
@@ -134,7 +137,7 @@ for (i in 1:length(files)) {
 
 ```{r}
 experiment_data = experiment_data %>% 
-  mutate(correct_response_key = ifelse(substr(as.character(experiment_data$response_mappings[1]),1,7) == 'correct',as.numeric(substr(as.character(response_choices),1,2)),as.numeric(substr(as.character(response_choices),3,4))),rotating = (rotation_speed != 0),experiment_trial_type=gsub(" ","",experiment_trial_type)) %>%
+  mutate(correct_response_key = ifelse(substr(as.character(experiment_data$response_mappings),1,7) == 'correct',as.numeric(substr(as.character(response_choices),1,2)),as.numeric(substr(as.character(response_choices),3,4))),rotating = (rotation_speed != 0),experiment_trial_type=gsub(" ","",experiment_trial_type)) %>%
   mutate(answer_was_correct=ifelse(correct_response=="correct",response==correct_response_key,response != correct_response_key))
 
 #Find which subjects passed more than 75% of the consonant checks, exclude those who didn't
@@ -176,7 +179,7 @@ final_data = subject_aggregated_data %>%
 #data for analysis based on accuracy
 final_accuracy_data = subject_aggregated_data %>% 
   group_by(rotating) %>% 
-  summarize(accuracy.mean = mean(correct),accuracy.sem = sem(correct))
+  summarize(accuracy.mean = mean(swap),accuracy.sem = sem(swap))
 
 #data for main analysis split by rotation_time
 final_time_split_data = subject_aggregated_time_split_data %>% 
@@ -244,7 +247,7 @@ ggplot(final_accuracy_data,aes(x=rotating,y=accuracy.mean,fill=rotating)) +
 n_subjects = length(unique(subject_aggregated_data$subject))
 
 
-t_res = t.test(subject_aggregated_data[!subject_aggregated_data$rotating,]$correct,subject_aggregated_data[subject_aggregated_data$rotating,]$correct,paired=T)
+t_res = t.test(subject_aggregated_data[!subject_aggregated_data$rotating,]$swap,subject_aggregated_data[subject_aggregated_data$rotating,]$swap,paired=T)
 F_stat = (t_res$statistic)^2
 p = pf(F_stat,1,n_subjects-1,lower.tail=F)
 
@@ -266,8 +269,7 @@ ggplot(final_time_split_data,aes(x=rotating,y=K.mean,ymax=final_time_split_data$
   theme_bw()
 ```
 
-This plot is the same as the plot of the main result, except split by the time the object was hidden, to show any potential effects of how long the object must be mentally rotated or held in memory.
-
+This plot is the same as the plot of the main result, except split by the time the object was hidden, to show any potential effects of how long the object must be mentally rotated or held in memory. We did not replicate the original results in this analysis either, and we do not even appear to have the same trends as they did.
 
 Exploratory analyses
 -------------------------
@@ -297,6 +299,22 @@ ggplot(final_clipped_data,aes(x=rotating,y=K.mean,fill=rotating)) +
   theme_bw()
 ```
 
+
+```{r}
+n_subjects = length(unique(subject_aggregated_data$subject))
+
+
+t_res = t.test(subject_aggregated_data[!subject_aggregated_data$rotating,]$clipped_K,subject_aggregated_data[subject_aggregated_data$rotating,]$clipped_K,paired=T)
+F_stat = (t_res$statistic)^2
+p = pf(F_stat,1,n_subjects-1,lower.tail=F)
+
+
+```
+
+$$F(1,`r n_subjects-1`) = `r F_stat`, p = `r p`$$
+
+Still cannot reject the null even if we assume the original authors clipped capacity at 0.
+
 ###Accuracy by condition:
 ```{r}
 overall_accuracies = subject_aggregated_data %>% group_by(rotating) %>% summarize(correct = mean(correct),rotate=mean(rotate),swap=mean(swap)) %>% gather(condition,accuracy,correct,rotate,swap)
@@ -307,3 +325,51 @@ ggplot(overall_accuracies,aes(x=condition,y=accuracy,fill=rotating)) +
   theme_bw()
 ```
 
+
+###Error checking our experiment setup
+
+```{r}
+stuff = experiment_data %>% mutate(delta_angle = final_angle-(initial_angle+rotation_speed*rotation_time),delta_object = object_specifier != final_object_specifier)
+```
+
+The object was positioned correctly and did not change on the 'correct' trials
+
+```{r}
+!any(stuff[stuff$experiment_trial_type == 'correct',]$delta_angle != 0 | stuff[stuff$experiment_trial_type == 'correct',]$delta_object)
+```
+
+The object was positioned correctly and did change on the 'swap' trials
+
+```{r}
+!any(stuff[stuff$experiment_trial_type == 'swap',]$delta_angle != 0 | !stuff[stuff$experiment_trial_type == 'swap',]$delta_object)
+```
+
+The object was positioned incorrectly and did not change on the 'rotate' trials. 
+
+```{r}
+!any(stuff[stuff$experiment_trial_type == 'rotate',]$delta_angle == 0 | stuff[stuff$experiment_trial_type == 'rotate',]$delta_object)
+```
+
+It does not appear that there was any problem with our experimental code.
+
+
+Conclusions
+---------------
+
+We were unable to replicate the original result. This could perhaps simply be due to an overestimated effect size in the original paper which caused us to underpower our sample, because our results were in the same direction as the original study and trending towards significance. However, even if that is the case, our capacity estimates were much lower than the original authors, which suggests some qualitative difference. This may be an effect of running the study on Amazon Mechanical Turk, or of the longer task in the original study, which may have allowed participants to learn the task more thoroughly and perform better towards the end. Further research and meta-analysis is needed to fully evaluate this effect.
+
+
+Notes
+--------------
+
+After data collection, we discovered an error in our pre-registered analysis code, from testing we had retained 
+
+  substr(as.character(experiment_data$response_mappings[1]),1,7) == 'correct'
+
+instead of the correct
+
+  substr(as.character(experiment_data$response_mappings),1,7) == 'correct'
+  
+This meant that all subjects results were computed as though they had the first subjects response key mapping (response keys were counterbalanced across participants). We have corrected this code in this writeup.
+
+We also noted that our accuracy based secondary analysis was comparing accuracy in the 'correct' condition rather than the 'swap' condition, and corrected this code in this writeup. 
